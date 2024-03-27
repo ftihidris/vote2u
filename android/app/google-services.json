@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1013674080696",
+    "project_id": "vote2u-6d272",
+    "storage_bucket": "vote2u-6d272.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013674080696:android:776a952c6790533d9eb74d",
+        "android_client_info": {
+          "package_name": "com.bravechains.vote2u"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDws0vdCwHZD2Bv1-4Tmk9-pHgybSVM5o0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013674080696:android:99c6bd8d938534bc9eb74d",
+        "android_client_info": {
+          "package_name": "com.example.vote2u"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDws0vdCwHZD2Bv1-4Tmk9-pHgybSVM5o0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
