@@ -22,7 +22,7 @@ Widget buildCardCandidate(
         children: <Widget>[
           Container(
             width:140,
-            child: Image.asset(
+            child: Image.network(
               imagePath,
               height: 140,
               fit: BoxFit.cover,
