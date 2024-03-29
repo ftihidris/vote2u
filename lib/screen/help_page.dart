@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vote2u/utils/app_drawer.dart';
 
-class helpPage extends StatelessWidget {
+class HelpPage extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  helpPage({Key? key}) : super(key: key);
+  HelpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +75,7 @@ class helpPage extends StatelessWidget {
           title: Text(
             question,
             style: const TextStyle(
-              fontSize: 16,
+              fontSize: 14,
               fontWeight: FontWeight.bold,
               color: Color.fromARGB(255, 63, 41, 120),
             ),
@@ -88,7 +88,7 @@ class helpPage extends StatelessWidget {
                 child: Text(
                   answer,
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 12,
                     color: Colors.grey[800],
                   ),
                 ),

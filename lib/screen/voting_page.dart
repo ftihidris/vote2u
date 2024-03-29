@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:vote2u/utils/app_drawer.dart';
 
-class votingPage extends StatelessWidget {
+class VotingPage extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  votingPage({Key? key}) : super(key: key);
+  VotingPage({super.key});
 
   @override
   Widget build(BuildContext context) {

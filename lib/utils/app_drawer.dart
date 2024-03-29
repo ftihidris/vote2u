@@ -5,7 +5,7 @@ import 'package:vote2u/utils/navigation_utils.dart';
 import 'package:vote2u/utils/auth_preferences.dart';
 
 class AppDrawer extends StatelessWidget {
-  const AppDrawer({Key? key});
+  const AppDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {

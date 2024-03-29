@@ -11,19 +11,19 @@ void navigateToPage(BuildContext context, String title) {
     case 'Home':
       Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage()));
     case 'Start Voting':
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => votingPage()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => VotingPage()));
       break;
     case 'Candidate':
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => candidatePage()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => CandidatePage()));
       break;
     case 'Result':
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => resultPage()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => ResultPage()));
       break;
     case 'Dashboard':
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => dashboardPage()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => DashboardPage()));
       break;
     case 'Need Help?':
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => helpPage()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => HelpPage()));
       break;
     default:
       // Handle default case or do nothing

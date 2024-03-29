@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:vote2u/utils/app_drawer.dart';
 
-class dashboardPage extends StatelessWidget {
+class DashboardPage extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  dashboardPage({Key? key}) : super(key: key);
+  DashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -60,11 +60,6 @@ class dashboardPage extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Future<void> _onWillPop() async {
-    // Prevent default behavior of popping the route
-    return;
   }
 
   Widget _buildCardWithHome(String title, String imagePath) {

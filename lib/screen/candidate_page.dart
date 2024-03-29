@@ -4,10 +4,10 @@ import 'package:vote2u/utils/app_drawer.dart';
 import 'package:vote2u/utils/widget_candidate.dart';
 import 'package:vote2u/firebase/storage_services.dart';
 
-class candidatePage extends StatelessWidget {
+class CandidatePage extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  candidatePage({Key? key}) : super(key: key);
+  CandidatePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +62,9 @@ class candidatePage extends StatelessWidget {
       future: Storage().downloadURL(imageName), // Using the Storage class
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator(); // Loading indicator while waiting for image
+          return Center(
+            child: const CircularProgressIndicator()
+            );// Loading indicator while waiting for image
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}'); // Display error if any
         } else {

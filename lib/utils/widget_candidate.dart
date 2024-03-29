@@ -5,7 +5,8 @@ Widget buildCardCandidate(
   String candidateName, 
   int candidateID,
   String candidateCourse,
-  String imagePath) 
+  String imageName,
+  ) 
   {
 
   return GestureDetector(
@@ -20,10 +21,10 @@ Widget buildCardCandidate(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Container(
+          SizedBox(
             width:140,
             child: Image.network(
-              imagePath,
+              imageName,
               height: 140,
               fit: BoxFit.cover,
             ),

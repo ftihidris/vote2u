@@ -5,7 +5,7 @@ import 'home_screen.dart';
 import 'login_page.dart'; // Import your login page
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   _SplashScreenState createState() => _SplashScreenState();

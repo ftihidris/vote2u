@@ -13,7 +13,7 @@ Future main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key});
+  const MyApp({super.key});
 
 
   @override

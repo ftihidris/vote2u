@@ -13,7 +13,7 @@ class FormContainerWidget extends StatefulWidget {
   final TextInputType? inputType;
 
   const FormContainerWidget({
-    Key? key,
+    super.key,
     this.controller,
     this.isPasswordField,
     this.fieldKey,
@@ -24,7 +24,7 @@ class FormContainerWidget extends StatefulWidget {
     this.validator,
     this.onFieldSubmitted,
     this.inputType,
-  }) : super(key: key);
+  });
 
   @override
   _FormContainerWidgetState createState() => _FormContainerWidgetState();
