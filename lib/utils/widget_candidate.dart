@@ -17,16 +17,18 @@ Widget buildCardCandidate(
       clipBehavior: Clip.antiAliasWithSaveLayer,
       elevation: 2,
       margin: const EdgeInsets.fromLTRB(13, 20, 13, 0),
-      
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           SizedBox(
-            width:140,
-            child: Image.network(
-              imageName,
-              height: 140,
-              fit: BoxFit.cover,
+            width:130,
+            child: Material(
+              elevation: 3, // Adjust elevation as needed
+              child: Image.network(
+                imageName,
+                height: 140,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           Expanded(
