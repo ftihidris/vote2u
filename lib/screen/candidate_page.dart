@@ -51,19 +51,17 @@ class CandidatePage extends StatelessWidget {
       ),
     );
   }
-
   Widget buildCandidateCard(BuildContext context, Map<String, dynamic> candidateData) {
     String candidateName = candidateData['candidatesName'];
     int candidateID = candidateData['candidatesID'];
     String candidateCourse = candidateData['candidatesCourse'];
     String imageName = candidateData['candidatesPhoto'] ?? 'defaultImageName.png'; // Use default image name if not provided
-
     return FutureBuilder(
       future: Storage().downloadURL(imageName), // Using the Storage class
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: const CircularProgressIndicator()
+          return const Center(
+            child: CircularProgressIndicator()
             );// Loading indicator while waiting for image
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}'); // Display error if any
