@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:vote2u/utils/auth_preferences.dart'; // Import your AuthPreferences class
-import 'package:vote2u/screen/login_page.dart';
-import 'package:vote2u/screen/signup_page.dart';
+import 'package:vote2u/screen/auth/auth_preferences.dart';
+import 'package:vote2u/screen/auth/login_page.dart';
+import 'package:vote2u/screen/auth/signup_page.dart';
 import 'package:vote2u/screen/home_page.dart';
+import 'package:vote2u/utils/constants.dart';
+
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -52,7 +54,7 @@ class HomeScreen extends StatelessWidget {
                         Center(
                           child: SizedBox(
                             width: 250,
-                            height: 40,
+                            height: 50,
                             child: ElevatedButton(
                               onPressed: () {
                                 Navigator.push(
@@ -63,8 +65,10 @@ class HomeScreen extends StatelessWidget {
                                 );
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color.fromARGB(255, 63, 41, 120),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                                backgroundColor:
+                                    darkPurple,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(14)),
                               ),
                               child: const Text(
                                 'Login',
@@ -76,11 +80,12 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 20), // Added SizedBox for spacing
+                        const SizedBox(
+                            height: 17), // Added SizedBox for spacing
                         Center(
                           child: SizedBox(
                             width: 250,
-                            height: 40,
+                            height: 50,
                             child: ElevatedButton(
                               onPressed: () {
                                 Navigator.push(
@@ -91,8 +96,10 @@ class HomeScreen extends StatelessWidget {
                                 );
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color.fromARGB(255, 131, 121, 205),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                                backgroundColor:
+                                    softPurple,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(14)),
                               ),
                               child: const Text(
                                 'Sign Up',
@@ -113,7 +120,7 @@ class HomeScreen extends StatelessWidget {
                       children: [
                         Image.asset(
                           'assets/images/4.png', // Replace with your image path
-                          width: 300,
+                          width: 260,
                         ),
                       ],
                     ),

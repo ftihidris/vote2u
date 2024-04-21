@@ -1,33 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:vote2u/firebase/firebase_options.dart';
-import 'package:vote2u/screen/login_page.dart';
-import 'package:vote2u/screen/splashscreen_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'firebase/firebase_options.dart';
+import 'screen/auth/login_page.dart';
+import 'screen/splashscreen_page.dart';
 
-Future main() async {
-  runApp(const MyApp());
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // Disable app verification for testing
+  FirebaseAuth.instance.setSettings(appVerificationDisabledForTesting: true);
+  runApp(const Vote2U());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+class Vote2U extends StatelessWidget {
+  const Vote2U({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My App',
-      initialRoute: '/',
+      title: 'Vote2U',
+      initialRoute: 'HomePage',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),
       routes: {
-          '/login': (context) =>  const LoginPage(), 
+        '/login': (context) => const LoginPage(),
       },
     );
   }

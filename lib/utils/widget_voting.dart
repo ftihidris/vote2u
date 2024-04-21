@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vote2u/utils/constants.dart';
 
 Widget buildCardVoting(
   BuildContext context, 
@@ -10,11 +11,11 @@ Widget buildCardVoting(
   return GestureDetector(
     child: Card(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: mediumBorderRadius,
       ),
       clipBehavior: Clip.antiAliasWithSaveLayer,
-      elevation: 2,
-      margin: const EdgeInsets.fromLTRB(13, 17, 13, 0),
+      elevation: elevation2,
+      margin: const EdgeInsets.fromLTRB(18, 20, 18, 0),
       child: Stack(
         children: [
           Row(
@@ -23,7 +24,7 @@ Widget buildCardVoting(
               SizedBox(
                 width: 110,
                 child: Material(
-                  elevation: 3, // Adjust elevation as needed
+                  elevation: elevation3, // Adjust elevation as needed
                   child: Image.network(
                     imageName,
                     height: 120,
@@ -33,7 +34,7 @@ Widget buildCardVoting(
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(10),
+                  padding: mediumEdgeInsets,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -73,7 +74,7 @@ Widget buildCardVoting(
             height: 35,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 63, 41, 120), // Background color
+                backgroundColor: darkPurple, // Background color
               ),
               onPressed: () {
                 // Handle button press

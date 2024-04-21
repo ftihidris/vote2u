@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vote2u/utils/navigation_utils.dart';
+import 'package:vote2u/utils/constants.dart';
 
 Widget buildCardWithHome(BuildContext context, String title, String imagePath) {
   return GestureDetector(
@@ -8,10 +9,10 @@ Widget buildCardWithHome(BuildContext context, String title, String imagePath) {
     },
     child: Card(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: mediumBorderRadius,
       ),
       clipBehavior: Clip.antiAliasWithSaveLayer,
-      elevation: 2
+      elevation: elevation2
     ,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -23,7 +24,7 @@ Widget buildCardWithHome(BuildContext context, String title, String imagePath) {
             fit: BoxFit.cover,
           ),
           Padding(
-            padding: const EdgeInsets.all(10),
+            padding: mediumEdgeInsets,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[

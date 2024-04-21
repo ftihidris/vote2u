@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vote2u/utils/navigation_utils.dart';
-import 'package:vote2u/utils/auth_preferences.dart';
+import 'package:vote2u/screen/auth/auth_preferences.dart';
+import 'package:vote2u/utils/constants.dart';
 
 class AppDrawer extends StatelessWidget {
-  const AppDrawer({super.key});
+  const AppDrawer({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,16 +16,17 @@ class AppDrawer extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
         } else {
-          if (snapshot.hasData) {
+          if (snapshot.hasError) {
+            return const Text('Error loading user data');
+          } else if (snapshot.hasData) {
             return Drawer(
               child: Column(
                 children: [
                   UserAccountsDrawerHeader(
                     decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 63, 41, 120),
+                      color: darkPurple,
                     ),
                     accountName: FutureBuilder<DocumentSnapshot>(
-                      //Read the data collection from firestore
                       future: FirebaseFirestore.instance
                           .collection('users')
                           .doc(snapshot.data!.uid)
@@ -32,87 +34,104 @@ class AppDrawer extends StatelessWidget {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting) {
                           return const CircularProgressIndicator();
-                        } else {
-                          if (snapshot.hasData && snapshot.data != null) {
-                            final firstName = snapshot.data!['firstName'];
-                            final lastName = snapshot.data!['lastName'];
-                            return Text(
-                              '$firstName $lastName', 
-                              style: const TextStyle(
+                        } else if (snapshot.hasError) {
+                          return const Text('Error loading user name');
+                        } else if (snapshot.hasData && snapshot.data != null) {
+                          final firstName = snapshot.data!['firstName'];
+                          final lastName = snapshot.data!['lastName'];
+                          return Text(
+                            '${firstName.toUpperCase()} ${lastName.toUpperCase()}',
+                            style: const TextStyle(
                               fontSize: 20,
-                              fontWeight: FontWeight.bold));
-                          } else {
-                            return const Text('Name not found');
-                          }
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        } else {
+                          return const Text('Name not found');
                         }
                       },
                     ),
                     accountEmail: Text(snapshot.data!.email ?? 'Email not found'),
                   ),
-                  ListTile(
-                    title: const Text('Home'),
-                    textColor: const Color.fromARGB(255, 63, 41, 120),
-                    onTap: () {
-                      navigateToPage(context, 'Home');
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('Start Voting'),
-                    textColor: const Color.fromARGB(255, 63, 41, 120),
-                    onTap: () {
-                      navigateToPage(context, 'Start Voting');
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('Candidate'),
-                    textColor: const Color.fromARGB(255, 63, 41, 120),
-                    onTap: () {
-                      navigateToPage(context, 'Candidate');
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('Result'),
-                    textColor: const Color.fromARGB(255, 63, 41, 120),
-                    onTap: () {
-                      navigateToPage(context, 'Result');
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('Dashboard'),
-                    textColor: const Color.fromARGB(255, 63, 41, 120),
-                    onTap: () {
-                      navigateToPage(context, 'Dashboard');
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('Need Help?'),
-                    textColor: const Color.fromARGB(255, 63, 41, 120),
-                    onTap: () {
-                      navigateToPage(context, 'Need Help?');
-                    },
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.only(left: 16),
+                      child: Wrap(
+                        spacing: 8,
+                        runSpacing: 4,
+                        children: [
+                          ListTile(
+                            title: const Text('Home'),
+                            textColor: darkPurple,
+                            onTap: () {
+                              navigateToPage(context, 'Home');
+                            },
+                          ),
+                          ListTile(
+                            title: const Text('Start Voting'),
+                            textColor: darkPurple,
+                            onTap: () {
+                              navigateToPage(context, 'Start Voting');
+                            },
+                          ),
+                          ListTile(
+                            title: const Text('Candidate'),
+                            textColor: darkPurple,
+                            onTap: () {
+                              navigateToPage(context, 'Candidate');
+                            },
+                          ),
+                          ListTile(
+                            title: const Text('Result'),
+                            textColor: darkPurple,
+                            onTap: () {
+                              navigateToPage(context, 'Result');
+                            },
+                          ),
+                          ListTile(
+                            title: const Text('Dashboard'),
+                            textColor: darkPurple,
+                            onTap: () {
+                              navigateToPage(context, 'Dashboard');
+                            },
+                          ),
+                          ListTile(
+                            title: const Text('Need Help?'),
+                            textColor: darkPurple,
+                            onTap: () {
+                              navigateToPage(context, 'Need Help?');
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                   const Spacer(),
                   GestureDetector(
                     onTap: () async {
-                      await FirebaseAuth.instance.signOut();
-                      await AuthPreferences.storeUserLoggedInState(false);
-                      Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
-                      },
-                      // Logout action
-                    
+                      try {
+                        await FirebaseAuth.instance.signOut();
+                        await AuthPreferences.storeUserLoggedInState(false, false);
+                        Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+                      } catch (e) {
+                        print('Error signing out: $e');
+                        // Handle sign out error
+                      }
+                    },
                     child: const Padding(
-                      padding: EdgeInsets.all(16.0),
+                      padding: EdgeInsets.fromLTRB(32, 16, 16, 40),
                       child: Row(
                         children: [
                           Icon(
                             Icons.logout,
-                            color: Color.fromARGB(255, 63, 41, 120),
+                            color:  darkPurple,
                           ),
-                          SizedBox(width: 16.0),
-                          Text(
+                           SizedBox(width: 16.0),
+                           Text(
                             'Logout',
                             style: TextStyle(
-                              color: Color.fromARGB(255, 63, 41, 120),
+                              color: darkPurple,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -125,7 +144,7 @@ class AppDrawer extends StatelessWidget {
               ),
             );
           } else {
-            return const CircularProgressIndicator();
+            return const Text('User not authenticated');
           }
         }
       },

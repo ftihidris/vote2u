@@ -84,12 +84,7 @@ class _ElectionInfoState extends State<CastPage> {
                         InputDecoration(hintText: 'Enter Candidate Name'),
                   ),
                 ),
-                ElevatedButton(
-                    onPressed: () {
-                      addCandidate(
-                          addCandidateController.text, widget.ethClient);
-                    },
-                    child: Text('Add Candidate'))
+               
               ],
             ),
             Row(

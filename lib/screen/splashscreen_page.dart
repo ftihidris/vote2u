@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:vote2u/utils/auth_preferences.dart';
-import 'home_screen.dart';
-import 'login_page.dart'; // Import your login page
+import 'package:vote2u/screen/auth/auth_preferences.dart';
+import 'package:vote2u/screen/home_screen.dart';
+import 'package:vote2u/screen/auth/login_page.dart'; 
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  const SplashScreen({Key? key});
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -19,16 +19,28 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> checkLoginStatus() async {
-    // Check if the user is logged in
-    bool isLoggedIn = await AuthPreferences.getUserLoggedInState();
-    // Navigate based on login status
-    navigateToNextScreen(isLoggedIn);
+    try {
+      // Check if the user is logged in
+      bool isLoggedIn = await AuthPreferences.getUserLoggedInState();
+      print('User logged in status: $isLoggedIn'); // Add logging
+
+      // Navigate based on login status
+      navigateToNextScreen(isLoggedIn);
+    } catch (error) {
+      print('Error checking login status: $error'); // Add error handling
+      // Navigate to login page in case of error
+      navigateToNextScreen(false);
+    }
   }
 
   void navigateToNextScreen(bool isLoggedIn) {
-    // Replace HomeScreen with your home screen widget
-    // Replace LoginPage with your login page widget
+    // Determine the next screen based on login status
     Widget nextScreen = isLoggedIn ? const HomeScreen() : const LoginPage();
+
+    // If the user is not logged in, redirect them to the HomeScreen
+    if (!isLoggedIn) {
+      nextScreen = const HomeScreen();
+    }
 
     // Simulate a delay for the splash screen
     Future.delayed(const Duration(seconds: 1), () {
@@ -49,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/4.png', // Replace with your image path
+              'assets/images/4.png', 
               width: 150,
             ),
             const SizedBox(height: 16),

@@ -1,11 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:vote2u/screen/home_page.dart';
+import 'package:vote2u/screen/auth/loading_page.dart';
 import 'package:vote2u/firebase/firebase_auth_services.dart';
-import 'package:vote2u/screen/login_page.dart';
+import 'package:vote2u/screen/auth/login_page.dart';
 import 'package:vote2u/utils/form_container_widget.dart';
 import 'package:vote2u/utils/toast.dart';
-import 'package:vote2u/utils/auth_preferences.dart';
+import 'package:vote2u/screen/auth/auth_preferences.dart';
+import 'package:vote2u/utils/constants.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -24,6 +25,13 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _lastNameController = TextEditingController();
 
   bool isSigningUp = false;
+  
+  @override
+  void initState() {
+    super.initState();
+    // Add a listener to the username controller to update the email field
+    _usernameController.addListener(_updateEmail);
+  }
 
   @override
   void dispose() {
@@ -34,6 +42,13 @@ class _SignUpPageState extends State<SignUpPage> {
     _lastNameController.dispose();
     super.dispose();
   }
+    void _updateEmail() {
+    // Get the username entered by the user
+    String username = _usernameController.text;
+    // Update the email field with the username + "@gmail.com"
+    _emailController.text = '$username@student.uitm.edu.my';
+  }
+
 
 @override
 Widget build(BuildContext context) {
@@ -57,12 +72,6 @@ Widget build(BuildContext context) {
               ),
             ),
             const SizedBox(height: 50),
-            FormContainerWidget(
-              controller: _usernameController,
-              hintText: "Student ID",
-              isPasswordField: false,
-            ),
-            const SizedBox(height: 10),
             Row(
               children: [
                  Expanded(
@@ -85,6 +94,12 @@ Widget build(BuildContext context) {
                         height: 10,
                          ),
             FormContainerWidget(
+              controller: _usernameController,
+              hintText: "Student ID",
+              isPasswordField: false,
+            ),
+            const SizedBox(height: 10),
+            FormContainerWidget(
               controller: _emailController,
               hintText: "Email",
               isPasswordField: false,
@@ -104,10 +119,10 @@ Widget build(BuildContext context) {
               onTap: _signUp,
               child: Container(
                 width: double.infinity,
-                height: 45,
+                height: mediumSizeBox,
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 63, 41, 120),
-                  borderRadius: BorderRadius.circular(10),
+                  color: darkPurple,
+                  borderRadius: largeBorderRadius,
                 ),
                 child: Center(
                   child: isSigningUp
@@ -141,7 +156,7 @@ Widget build(BuildContext context) {
                   child: const Text(
                     "Login",
                     style: TextStyle(
-                        color: Color.fromARGB(255, 63, 41, 120), fontWeight: FontWeight.bold),
+                        color: darkPurple, fontWeight: FontWeight.bold),
                   ),
                 )
               ],
@@ -170,10 +185,10 @@ Widget build(BuildContext context) {
 
     if (user != null) {
       showToast(message: "User is successfully created");
-      await AuthPreferences.storeUserLoggedInState(true);
+      await AuthPreferences.storeUserLoggedInState(true, true);
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (context) => LoadingPage(email: email, isSignUp: true)),
       );
     } else {
       showToast(message: "Some error happened");
