@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:vote2u/screen/auth/loading_page.dart';
+import 'package:vote2u/screen/auth/signup_page.dart';
 import 'package:vote2u/screen/home_page.dart';
-import 'package:vote2u/screen/signup_page.dart';
 import 'package:vote2u/utils/toast.dart';
 import 'package:vote2u/utils/form_container_widget.dart';
-import 'package:vote2u/utils/auth_preferences.dart';
+import 'package:vote2u/screen/auth/auth_preferences.dart';
+import 'package:vote2u/utils/constants.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -42,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    'assets/images/2.png', 
+                    'assets/images/2.png',
                     width: 200,
                   ),
                 ],
@@ -69,10 +71,10 @@ class _LoginPageState extends State<LoginPage> {
               },
               child: Container(
                 width: double.infinity,
-                height: 45,
+                height: mediumSizeBox,
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 63, 41, 120),
-                  borderRadius: BorderRadius.circular(10),
+                  color: darkPurple,
+                  borderRadius: largeBorderRadius,
                 ),
                 child: Center(
                   child: _isSigning ? const CircularProgressIndicator(color: Colors.white) : const Text(
@@ -94,10 +96,10 @@ class _LoginPageState extends State<LoginPage> {
               },
               child: Container(
                 width: double.infinity,
-                height: 45,
+                height: mediumSizeBox,
                 decoration: BoxDecoration(
                   color: Colors.red,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: largeBorderRadius,
                 ),
                 child: const Center(
                   child: Row(
@@ -138,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: const Text(
                     "Sign Up",
                     style: TextStyle(
-                      color: Color.fromARGB(255, 63, 41, 120),
+                      color: darkPurple,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -170,11 +172,11 @@ class _LoginPageState extends State<LoginPage> {
       });
 
       if (userCredential.user != null) {
-        await AuthPreferences.storeUserLoggedInState(true);
+        await AuthPreferences.storeUserLoggedInState(true, true);
         showToast(message: "User is successfully signed in");
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => LoadingPage(email: email, isSignUp: true)),
         );
       } else {
         showToast(message: "Sign in failed");
@@ -187,31 +189,42 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  _signInWithGoogle() async {
-    final GoogleSignIn googleSignIn = GoogleSignIn();
+void _signInWithGoogle() async {
+  final GoogleSignIn googleSignIn = GoogleSignIn();
 
-    try {
-      final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
+  try {
+    final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
 
-      if (googleSignInAccount != null) {
-        final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+    if (googleSignInAccount != null) {
+      // Check if the user's email ends with "@uitm.edu.my"
+      if (!googleSignInAccount.email.endsWith('@student.uitm.edu.my')) {
+        showToast(message: 'Please sign in with a UITM Google account.');
+        return;
+      }
 
-        final AuthCredential credential = GoogleAuthProvider.credential(
-          idToken: googleSignInAuthentication.idToken,
-          accessToken: googleSignInAuthentication.accessToken,
-        );
+      final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
 
-        await _firebaseAuth.signInWithCredential(credential);
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        idToken: googleSignInAuthentication.idToken,
+        accessToken: googleSignInAuthentication.accessToken,
+      );
 
-        await AuthPreferences.storeUserLoggedInState(true);
+      await _firebaseAuth.signInWithCredential(credential);
+
+      // Check if the user is already signed in with Firebase before navigating
+      final User? user = _firebaseAuth.currentUser;
+      if (user != null) {
+        await AuthPreferences.storeUserLoggedInState(true, false);
 
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomePage()),
         );
       }
-    } catch (e) {
-      showToast(message: "Sign in with Google failed: $e");
     }
+  } catch (e) {
+    showToast(message: "Sign in with Google failed: $e");
   }
+}
+
 }

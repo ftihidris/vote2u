@@ -1,14 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vote2u/utils/app_drawer.dart';
 import 'package:vote2u/utils/widget_home.dart'; 
+import 'package:vote2u/screen/auth/loading_page.dart';
+import 'package:vote2u/utils/constants.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-  
+  const MyApp({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,14 +27,21 @@ class MyApp extends StatelessWidget {
 class HomePage extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  HomePage({super.key});
+  HomePage({Key? key});
 
   @override
   Widget build(BuildContext context) {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? user = auth.currentUser;
+    
+    if (user != null && !user.emailVerified) {
+      // User is not verified, show verification screen
+      return LoadingPage(email: user.email!, isSignUp: true);
+    }
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 63, 41, 120),
+        backgroundColor: darkPurple,
         automaticallyImplyLeading: false,
         title: Row(
           children: [
@@ -48,7 +57,7 @@ class HomePage extends StatelessWidget {
             ),
             const Text(
               '2U',
-              style: TextStyle(color: Color.fromARGB(255, 131, 121, 205), fontWeight: FontWeight.bold),
+              style: TextStyle(color: softPurple, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -58,11 +67,11 @@ class HomePage extends StatelessWidget {
         children: [
           const SizedBox(height: 10),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
             child: buildCardWithHome(context, 'Start Voting', 'assets/images/Asset 5.png'),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Row(
               children: [
                 Expanded(child: buildCardWithHome(context, 'Candidate', 'assets/images/Asset 4.png')),
@@ -71,9 +80,9 @@ class HomePage extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 15),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Row(
               children: [
                 Expanded(child: buildCardWithHome(context, 'Dashboard', 'assets/images/Asset 2.png')),

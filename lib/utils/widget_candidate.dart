@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vote2u/utils/constants.dart';
 
 Widget buildCardCandidate(
   BuildContext context, 
@@ -6,24 +7,22 @@ Widget buildCardCandidate(
   int candidateID,
   String candidateCourse,
   String imageName,
-  ) 
-  {
-
+) {
   return GestureDetector(
     child: Card(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: mediumBorderRadius,
       ),
       clipBehavior: Clip.antiAliasWithSaveLayer,
-      elevation: 2,
-      margin: const EdgeInsets.fromLTRB(13, 20, 13, 0),
+      elevation: elevation2,
+      margin: const EdgeInsets.fromLTRB(18, 20, 18, 0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           SizedBox(
             width:130,
             child: Material(
-              elevation: 3, // Adjust elevation as needed
+              elevation: elevation3, // Adjust elevation as needed
               child: Image.network(
                 imageName,
                 height: 140,
@@ -33,7 +32,7 @@ Widget buildCardCandidate(
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(10),
+              padding: mediumEdgeInsets,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[

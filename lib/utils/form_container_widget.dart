@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vote2u/utils/constants.dart';
 
 class FormContainerWidget extends StatefulWidget {
   final TextEditingController? controller;
@@ -22,7 +23,7 @@ class FormContainerWidget extends StatefulWidget {
     this.helperText,
     this.onSaved,
     this.validator,
-    this.onFieldSubmitted,
+    this.onFieldSubmitted, 
     this.inputType,
   });
 
@@ -36,14 +37,14 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
   @override
   Widget build(BuildContext context) {
     return Material( // Wrap with Material widget
-      elevation: 1, // Set elevation to 1
-      borderRadius: BorderRadius.circular(10),
+      elevation: elevation1, // Set elevation to 1
+      borderRadius: largeBorderRadius,
       child: Container(
         width: double.infinity,
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
           color: const Color.fromARGB(255, 247, 242, 249),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: largeBorderRadius,
         ),
         child: TextFormField(
           style: const TextStyle(color: Colors.black),

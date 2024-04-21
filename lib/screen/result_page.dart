@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vote2u/utils/app_drawer.dart';
+import 'package:vote2u/utils/widget_candidate.dart';
+import 'package:vote2u/firebase/storage_services.dart';
+import 'package:vote2u/utils/constants.dart';
 
 class ResultPage extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -11,7 +15,7 @@ class ResultPage extends StatelessWidget {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 63, 41, 120),
+        backgroundColor: darkPurple,
         automaticallyImplyLeading: false,
         title: Row(
           children: [
@@ -22,83 +26,56 @@ class ResultPage extends StatelessWidget {
               },
             ),
             const Text(
-              'Result',
+              'Candidates',
               style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ],
         ),
       ),
       drawer: const AppDrawer(),
-      body: Column(
-        children: [
-          const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: _buildCardWithHome('Start Voting', 'assets/images/Asset 5.png'),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              children: [
-                Expanded(child: _buildCardWithHome('Candidate', 'assets/images/Asset 4.png')),
-                const SizedBox(width: 10),
-                Expanded(child: _buildCardWithHome('Result', 'assets/images/Asset 3.png')),
-              ],
-            ),
-          ),
-          const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              children: [
-                Expanded(child: _buildCardWithHome('Dashboard', 'assets/images/Asset 2.png')),
-                const SizedBox(width: 10),
-                Expanded(child: _buildCardWithHome('Need Help?', 'assets/images/Asset 1.png')),
-              ],
-            ),
-          ),
-        ],
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('candidates').snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            return ListView(
+              children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+                return buildCandidateCard(context, data);
+              }).toList(),
+            );
+          }
+        },
       ),
     );
   }
-
-  Future<void> _onWillPop() async {
-    // Prevent default behavior of popping the route
-    return;
-  }
-
-  Widget _buildCardWithHome(String title, String imagePath) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Image.asset(
-            imagePath,
-            height: 160,
-            width: double.infinity,
-            fit: BoxFit.cover,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    color: Colors.grey,
-                  ),
-                ), 
-              ],
-            ),
-          ),
-        ],
-      ),
+  Widget buildCandidateCard(BuildContext context, Map<String, dynamic> candidateData) {
+    String candidateName = candidateData['candidatesName'];
+    int candidateID = candidateData['candidatesID'];
+    String candidateCourse = candidateData['candidatesCourse'];
+    String imageName = candidateData['candidatesPhoto'] ?? 'defaultImageName.png'; // Use default image name if not provided
+    return FutureBuilder(
+      future: Storage().downloadURL(imageName), // Using the Storage class
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator()
+            );// Loading indicator while waiting for image
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}'); // Display error if any
+        } else {
+          return buildCardCandidate(
+            context,
+            candidateName,
+            candidateID,
+            candidateCourse,
+            snapshot.data!, // Use the URL retrieved from Firebase Storage
+          );
+        }
+      },
     );
   }
 }
