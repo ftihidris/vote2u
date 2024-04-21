@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vote2u/utils/app_drawer.dart';
 import 'package:vote2u/utils/widget_candidate.dart';
 import 'package:vote2u/firebase/storage_services.dart';
+import 'package:vote2u/utils/constants.dart';
 
 class CandidatePage extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -14,7 +15,7 @@ class CandidatePage extends StatelessWidget {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 63, 41, 120),
+        backgroundColor: darkPurple,
         automaticallyImplyLeading: false,
         title: Row(
           children: [

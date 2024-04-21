@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vote2u/utils/app_drawer.dart';
+import 'package:vote2u/utils/constants.dart';
 
 class HelpPage extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -12,7 +13,7 @@ class HelpPage extends StatelessWidget {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 63, 41, 120),
+        backgroundColor: darkPurple,
         automaticallyImplyLeading: false,
         title: Row(
           children: [
@@ -63,9 +64,9 @@ class HelpPage extends StatelessWidget {
     return Card(
       color: const Color.fromARGB(255, 247, 242, 249),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
+        borderRadius: largeBorderRadius,
       ),
-      elevation: 1,
+      elevation: elevation1,
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
       child: Theme(
         data: ThemeData(
@@ -77,7 +78,7 @@ class HelpPage extends StatelessWidget {
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
-              color: Color.fromARGB(255, 63, 41, 120),
+              color: darkPurple,
             ),
           ),
           children: [

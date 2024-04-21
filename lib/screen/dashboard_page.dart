@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vote2u/utils/app_drawer.dart';
+import 'package:vote2u/utils/constants.dart';
 
 class DashboardPage extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -11,7 +12,7 @@ class DashboardPage extends StatelessWidget {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 63, 41, 120),
+        backgroundColor: darkPurple,
         automaticallyImplyLeading: false,
         title: Row(
           children: [
@@ -65,7 +66,7 @@ class DashboardPage extends StatelessWidget {
   Widget _buildCardWithHome(String title, String imagePath) {
     return Card(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: mediumBorderRadius,
       ),
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: Column(
@@ -78,7 +79,7 @@ class DashboardPage extends StatelessWidget {
             fit: BoxFit.cover,
           ),
           Padding(
-            padding: const EdgeInsets.all(10),
+            padding: mediumEdgeInsets,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
