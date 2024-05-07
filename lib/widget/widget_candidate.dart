@@ -4,7 +4,7 @@ import 'package:vote2u/utils/constants.dart';
 Widget buildCardCandidate(
   BuildContext context, 
   String candidateName, 
-  int candidateID,
+  String candidateID,
   String candidateCourse,
   String imageName,
 ) {

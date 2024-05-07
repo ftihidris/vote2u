@@ -5,8 +5,6 @@ import 'package:vote2u/screen/home_page.dart';
 import 'package:vote2u/utils/toast.dart';
 import 'package:vote2u/utils/constants.dart';
 
-
-
 class LoadingPage extends StatefulWidget {
   final String email;
   final bool isSignUp;
@@ -30,7 +28,7 @@ class _LoadingPageState extends State<LoadingPage> {
   void initState() {
     super.initState();
     _checkEmailVerification();
-    _timer = Timer.periodic(Duration(seconds: 3), (_) {
+    _timer = Timer.periodic(const Duration(seconds: 3), (_) {
       _checkEmailVerified();
     });
   }

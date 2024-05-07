@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vote2u/utils/app_drawer.dart';
-import 'package:vote2u/utils/widget_candidate.dart';
+import 'package:vote2u/widget/widget_candidate.dart';
 import 'package:vote2u/firebase/storage_services.dart';
 import 'package:vote2u/utils/constants.dart';
 
@@ -54,7 +54,7 @@ class CandidatePage extends StatelessWidget {
   }
   Widget buildCandidateCard(BuildContext context, Map<String, dynamic> candidateData) {
     String candidateName = candidateData['candidatesName'];
-    int candidateID = candidateData['candidatesID'];
+    String candidateID = candidateData['candidatesID'];
     String candidateCourse = candidateData['candidatesCourse'];
     String imageName = candidateData['candidatesPhoto'] ?? 'defaultImageName.png'; // Use default image name if not provided
     return FutureBuilder(

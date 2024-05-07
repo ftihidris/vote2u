@@ -190,8 +190,6 @@ Widget build(BuildContext context) {
         context,
         MaterialPageRoute(builder: (context) => LoadingPage(email: email, isSignUp: true)),
       );
-    } else {
-      showToast(message: "Some error happened");
     }
   }
 }

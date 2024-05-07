@@ -101,7 +101,7 @@ class _VerificationState extends State<VerificationPage> {
                           // Retrieve current user's username from Firestore
                           String? currentUserUsername = await getCurrentUserUsername();
                           if (currentUserUsername != null && controller.text == currentUserUsername) {
-                            bool isVerified = await verifyVoter(int.parse(controller.text), ethClient!);
+                            bool isVerified = await verifyVoter(controller.text, ethClient!);
 
                             if (isVerified) {
                               Navigator.push(

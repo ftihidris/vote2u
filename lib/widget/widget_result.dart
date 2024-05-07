@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:vote2u/utils/constants.dart';
 
-Widget buildCardVoting(
+Widget buildResultCard(
   BuildContext context, 
   String candidateName, 
-  int candidateID,
+  String candidateID,
   String candidateCourse,
   String imageName,
+  {bool isWinner = false}
 ) {
   return GestureDetector(
     child: Card(
@@ -27,7 +28,7 @@ Widget buildCardVoting(
                   elevation: elevation3, // Adjust elevation as needed
                   child: Image.network(
                     imageName,
-                    height: 120,
+                    height: 140,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -71,16 +72,17 @@ Widget buildCardVoting(
           Positioned(
             bottom: 8,
             right: 8,
-            height: 35,
-            child: ElevatedButton(
+            height: 40,
+            child: 
+            ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: darkPurple, // Background color
               ),
-              onPressed: () {
+              onPressed: () async {
                 // Handle button press
               },
-              child: const Text('Vote', 
-              style: TextStyle (color: Colors.white),
+              child: const Text('95%', 
+              style: TextStyle (color: Colors.white, fontSize: 16),
             ),
           ),
           ),
