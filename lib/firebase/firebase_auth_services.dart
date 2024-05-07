@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vote2u/utils/toast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+
 class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -112,7 +113,7 @@ Future<User?> signInWithGoogle() async {
     if (googleUser == null) return null;
 
     // Check if the user's email ends with "@uitm.edu.my"
-    if (!googleUser.email.endsWith('@student.uitm.edu.my')) {
+    if (!googleUser.email.endsWith(studentEmailDomain)) {
       showToast(message: 'Please sign in with a UITM Google account.');
       return null;
     }

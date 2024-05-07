@@ -7,5 +7,5 @@ void startTimer() {
 }
 
 Future<void> playNotificationTone() async {
-  await _audioPlayer.play(AssetSource('eureka.mp3'));
+  await _audioPlayer.play(AssetSource('ringtone/eureka.mp3'));
 }

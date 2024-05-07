@@ -1,40 +1,24 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vote2u/utils/app_drawer.dart';
-import 'package:vote2u/utils/widget_home.dart'; 
+import 'package:vote2u/widget/widget_home.dart'; 
 import 'package:vote2u/screen/auth/loading_page.dart';
 import 'package:vote2u/utils/constants.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key});
-
+class HomePage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Homepage',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: HomePage(),
-    );
-  }
+  _HomePageState createState() => _HomePageState();
 }
 
-class HomePage extends StatelessWidget {
+class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  HomePage({Key? key});
 
   @override
   Widget build(BuildContext context) {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
-    
-    if (user != null && !user.emailVerified) {
+
+    if (user!= null &&!user.emailVerified) {
       // User is not verified, show verification screen
       return LoadingPage(email: user.email!, isSignUp: true);
     }

@@ -28,15 +28,15 @@ class AppDrawer extends StatelessWidget {
                     ),
                     accountName: FutureBuilder<DocumentSnapshot>(
                       future: FirebaseFirestore.instance
-                          .collection('users')
-                          .doc(snapshot.data!.uid)
-                          .get(),
+                         .collection('users')
+                         .doc(snapshot.data!.uid)
+                         .get(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting) {
                           return const CircularProgressIndicator();
                         } else if (snapshot.hasError) {
                           return const Text('Error loading user name');
-                        } else if (snapshot.hasData && snapshot.data != null) {
+                        } else if (snapshot.hasData && snapshot.data!= null) {
                           final firstName = snapshot.data!['firstName'];
                           final lastName = snapshot.data!['lastName'];
                           return Text(
@@ -51,61 +51,56 @@ class AppDrawer extends StatelessWidget {
                         }
                       },
                     ),
-                    accountEmail: Text(snapshot.data!.email ?? 'Email not found'),
+                    accountEmail: Text(snapshot.data!.email?? 'Email not found'),
                   ),
                   const SizedBox(height: 10),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.only(left: 16),
-                      child: Wrap(
-                        spacing: 8,
-                        runSpacing: 4,
-                        children: [
-                          ListTile(
-                            title: const Text('Home'),
-                            textColor: darkPurple,
-                            onTap: () {
-                              navigateToPage(context, 'Home');
-                            },
-                          ),
-                          ListTile(
-                            title: const Text('Start Voting'),
-                            textColor: darkPurple,
-                            onTap: () {
-                              navigateToPage(context, 'Start Voting');
-                            },
-                          ),
-                          ListTile(
-                            title: const Text('Candidate'),
-                            textColor: darkPurple,
-                            onTap: () {
-                              navigateToPage(context, 'Candidate');
-                            },
-                          ),
-                          ListTile(
-                            title: const Text('Result'),
-                            textColor: darkPurple,
-                            onTap: () {
-                              navigateToPage(context, 'Result');
-                            },
-                          ),
-                          ListTile(
-                            title: const Text('Dashboard'),
-                            textColor: darkPurple,
-                            onTap: () {
-                              navigateToPage(context, 'Dashboard');
-                            },
-                          ),
-                          ListTile(
-                            title: const Text('Need Help?'),
-                            textColor: darkPurple,
-                            onTap: () {
-                              navigateToPage(context, 'Need Help?');
-                            },
-                          ),
-                        ],
+                  ListView(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    shrinkWrap: true,
+                    children: [
+                      ListTile(
+                        title: const Text('Home'),
+                        textColor: darkPurple,
+                        onTap: () {
+                          navigateToPage(context, 'Home');
+                        },
                       ),
-                    ),
+                      ListTile(
+                        title: const Text('Start Voting'),
+                        textColor: darkPurple,
+                        onTap: () {
+                          navigateToPage(context, 'Start Voting');
+                        },
+                      ),
+                      ListTile(
+                        title: const Text('Candidate'),
+                        textColor: darkPurple,
+                        onTap: () {
+                          navigateToPage(context, 'Candidate');
+                        },
+                      ),
+                      ListTile(
+                        title: const Text('Result'),
+                        textColor: darkPurple,
+                        onTap: () {
+                          navigateToPage(context, 'Result');
+                        },
+                      ),
+                      ListTile(
+                        title: const Text('Dashboard'),
+                        textColor: darkPurple,
+                        onTap: () {
+                          navigateToPage(context, 'Dashboard');
+                        },
+                      ),
+                      ListTile(
+                        title: const Text('Need Help?'),
+                        textColor: darkPurple,
+                        onTap: () {
+                          navigateToPage(context, 'Need Help?');
+                        },
+                      ),
+                    ],
                   ),
                   const Spacer(),
                   GestureDetector(
@@ -120,7 +115,7 @@ class AppDrawer extends StatelessWidget {
                       }
                     },
                     child: const Padding(
-                      padding: EdgeInsets.fromLTRB(32, 16, 16, 40),
+                      padding: EdgeInsets.fromLTRB(32, 0, 16, 40),
                       child: Row(
                         children: [
                           Icon(
