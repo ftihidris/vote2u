@@ -12,8 +12,7 @@ Widget buildCardWithHome(BuildContext context, String title, String imagePath) {
         borderRadius: mediumBorderRadius,
       ),
       clipBehavior: Clip.antiAliasWithSaveLayer,
-      elevation: elevation2
-    ,
+      elevation: elevation2,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[

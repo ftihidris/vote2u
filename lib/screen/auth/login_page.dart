@@ -197,7 +197,7 @@ void _signInWithGoogle() async {
 
     if (googleSignInAccount != null) {
       // Check if the user's email ends with "@uitm.edu.my"
-      if (!googleSignInAccount.email.endsWith('@student.uitm.edu.my')) {
+      if (!googleSignInAccount.email.endsWith(studentEmailDomain)) {
         showToast(message: 'Please sign in with a UITM Google account.');
         return;
       }
