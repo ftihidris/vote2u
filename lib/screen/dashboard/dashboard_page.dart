@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
+import 'package:vote2u/screen/dashboard/dashboard_chart.dart';
 import 'package:vote2u/utils/app_drawer.dart';
 import 'package:vote2u/utils/constants.dart';
 import 'package:vote2u/utils/functions.dart';
@@ -42,7 +43,7 @@ class _DashboardPage extends State<DashboardPage> {
               },
             ),
             const Text(
-              'Result',
+              'Dashboard',
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
@@ -115,6 +116,11 @@ class _DashboardPage extends State<DashboardPage> {
           int totalVoters = snapshot.data![0];
           int totalVotes = snapshot.data![1];
           double percentage = (totalVotes / totalVoters) * 100;
+          if (totalVoters == 0) {
+            percentage = 0;
+          } else {
+            percentage = (totalVotes / totalVoters) * 100;
+          }
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Column(
@@ -122,7 +128,7 @@ class _DashboardPage extends State<DashboardPage> {
                 buildCardPercentage(
                   'Percentage of Voting Participation',
                   SizedBox(
-                    height: 6,
+                    height: 7,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: LinearProgressIndicator(
@@ -166,9 +172,24 @@ class _DashboardPage extends State<DashboardPage> {
   }
 
   Widget _buildChartCard(Web3Client ethClient) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: buildCardChart('Comparison of Candidates Result', 100),
-    );
-  }
+  return Padding(
+    padding: const EdgeInsets.fromLTRB(15, 0, 15, 25),
+    child: SizedBox(
+      height: 400, // Adjust the height as needed
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: buildCardChart(
+                  'Comparison of Candidates Result', 
+                  CandidateChart(),
+                ),
+              ),
+            ],
+          ),
+        )
+  );
+}
+
+
 }

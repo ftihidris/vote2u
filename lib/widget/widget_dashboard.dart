@@ -86,16 +86,21 @@ Widget buildCardPercentage(String title, Widget? subtitleWidget, double percenta
 }
 
 // Improved buildCardChart
-Widget buildCardChart(String title, int subTitle) {
+Widget buildCardChart(String title, Widget chartWidget) {
   return buildCardDashboard(
     title: title,
-    child: Center(
-      child: Text(
-        subTitle.toString(),
-        style: const TextStyle(
-          fontSize: 45,
-          color: darkPurple,
+    child: Card(
+      margin: const EdgeInsets.symmetric(horizontal:16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      elevation: null,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxHeight: 298, // Limit the height of the chartWidget
         ),
+        child: chartWidget,
       ),
     ),
   );
