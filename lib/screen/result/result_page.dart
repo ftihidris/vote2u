@@ -24,6 +24,7 @@ class _ResultPage extends State<ResultPage> {
 
   Future<BigInt> _numCandidatesToWin = Future.value(BigInt.zero);
   int? _numWinners;
+
   @override
   void initState() {
     super.initState();
@@ -101,126 +102,76 @@ class _ResultPage extends State<ResultPage> {
                             ),
                           ),
                           StreamBuilder(
-                            stream: FirebaseFirestore.instance
-                                .collection('candidates')
-                                .snapshots(),
-                            builder: (context,
-                                AsyncSnapshot<
-                                        QuerySnapshot<Map<String, dynamic>>>
-                                    snapshot) {
+                            stream: FirebaseFirestore.instance.collection('candidates').snapshots(),
+                            builder: (context,AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
+                                return const Center(child: CircularProgressIndicator());
                               } else if (snapshot.hasError) {
-                                return Center(
-                                    child: Text('Error: ${snapshot.error}'));
+                                return Center(child: Text('Error: ${snapshot.error}'));
                               } else {
-                                List<Map<String, dynamic>> winners = snapshot
-                                    .data!.docs
-                                    .take(_numWinners!)
-                                    .toList()
-                                    .map((document) => document.data())
-                                    .toList();
-                                List<Map<String, dynamic>> otherCandidates =
-                                    snapshot.data!.docs
-                                        .skip(_numWinners!)
-                                        .toList()
-                                        .map((document) => document.data())
-                                        .toList();
+                                // Get a list of candidates
+                                List<Map<String, dynamic>> candidates = snapshot.data!.docs.map((DocumentSnapshot document) =>document.data() as Map<String, dynamic>).toList();
+                                 // Fetch vote counts for all candidates
+                                Future<List<int>> voteCountsFuture =Future.wait(candidates.map((candidate) async {
+                                  return await getCandidateVoteCount(candidate['candidatesID'], _ethClient);
+                                }));
 
-                                return Column(
-                                  children: [
-                                    ...winners.map((candidateData) {
-                                      String candidateName =
-                                          candidateData['candidatesName'];
-                                      String candidateID =
-                                          candidateData['candidatesID'];
-                                      String candidateCourse =
-                                          candidateData['candidatesCourse'];
-                                      String imageName =
-                                          candidateData['candidatesPhoto'] ??
-                                              'defaultImageName.png';
+                                return FutureBuilder(
+                                  future: voteCountsFuture,
+                                  builder: (context,
+                                      AsyncSnapshot<List<int>>
+                                          voteCountsSnapshot) {
+                                    if (voteCountsSnapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return const Center(
+                                          child: CircularProgressIndicator());
+                                    } else if (voteCountsSnapshot.hasError) {
+                                      return Center(
+                                          child: Text(
+                                              'Error: ${voteCountsSnapshot.error}'));
+                                    } else {
+                                      List<int> voteCounts =
+                                          voteCountsSnapshot.data!;
+                                      // Sort candidates based on vote count in descending order
+                                      List<Map<String, dynamic>>
+                                          sortedCandidates = [
+                                        for (int i = 0; i < candidates.length; i++)
+                                          candidates[i]
+                                            ..['voteCount'] = voteCounts[i]
+                                      ]..sort((a, b) => b['voteCount'].compareTo(a['voteCount']));
 
-                                      return FutureBuilder(
-                                        future:
-                                            Storage().downloadURL(imageName),
-                                        builder: (BuildContext context,
-                                            AsyncSnapshot<String> snapshot) {
-                                          if (snapshot.connectionState ==
-                                              ConnectionState.waiting) {
-                                            return const Center(
-                                                child:
-                                                    CircularProgressIndicator()); // Loading indicator while waiting for image
-                                          } else if (snapshot.hasError) {
-                                            return Text(
-                                                'Error: ${snapshot.error}'); // Display error if any
-                                          } else {
-                                            return buildResultCard(
-                                              context,
-                                              candidateName,
-                                              candidateID,
-                                              candidateCourse,
-                                              snapshot.data!,
+                                      return SingleChildScrollView(
+                                        child: Column(
+                                          children: sortedCandidates
+                                              .map((candidateData) {
+                                            return Column(
+                                              children: [
+                                                _buildResultCard(context,candidateData,getCandidateVoteCount),
+                                                if (sortedCandidates.indexOf(
+                                                        candidateData) ==_numWinners! - 1) // Add container below the _numWinners-th card
+                                                  Container(
+                                                    decoration:
+                                                        const BoxDecoration(
+                                                      border: Border(
+                                                        bottom: BorderSide(
+                                                          color:
+                                                              darkPurple, // Set the color of the border
+                                                          width:
+                                                              2, // Set the width of the border
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    margin: const EdgeInsets.fromLTRB(20,20,20,5,
+                                                    ), // Add margin to adjust the position of the divider
+                                                  ),
+                                              ],
                                             );
-                                          }
-                                        },
-                                      );
-                                    }),
-                                    Container(
-                                      decoration: const BoxDecoration(
-                                        border: Border(
-                                          bottom: BorderSide(
-                                            color:
-                                                darkPurple, // Set the color of the border
-                                            width:
-                                                1, // Set the width of the border
-                                          ),
+                                          }).toList(),
                                         ),
-                                      ),
-                                      margin: const EdgeInsets.fromLTRB(
-                                          20,
-                                          20,
-                                          20,
-                                          10), // Add margin to adjust the position of the divider
-                                    ),
-                                    ...otherCandidates.map((candidateData) {
-                                      String candidateName =
-                                          candidateData['candidatesName'];
-                                      String candidateID =
-                                          candidateData['candidatesID'];
-                                      String candidateCourse =
-                                          candidateData['candidatesCourse'];
-                                      String imageName =
-                                          candidateData['candidatesPhoto'] ??
-                                              'defaultImageName.png';
-
-                                      return FutureBuilder(
-                                        future:
-                                            Storage().downloadURL(imageName),
-                                        builder: (BuildContext context,
-                                            AsyncSnapshot<String> snapshot) {
-                                          if (snapshot.connectionState ==
-                                              ConnectionState.waiting) {
-                                            return const Center(
-                                                child:
-                                                    CircularProgressIndicator()); // Loading indicator while waiting for image
-                                          } else if (snapshot.hasError) {
-                                            return Text(
-                                                'Error: ${snapshot.error}'); // Display error if any
-                                          } else {
-                                            return buildResultCard(
-                                              context,
-                                              candidateName,
-                                              candidateID,
-                                              candidateCourse,
-                                              snapshot.data!,
-                                            );
-                                          }
-                                        },
                                       );
-                                    }),
-                                  ],
+                                    }
+                                  },
                                 );
                               }
                             },
@@ -237,6 +188,43 @@ class _ResultPage extends State<ResultPage> {
           }
         },
       ),
+    );
+  }
+
+  Widget _buildResultCard(BuildContext context,
+      Map<String, dynamic> candidateData, voteCountFuture) {
+    String candidateName = candidateData['candidatesName'];
+    String candidateID = candidateData['candidatesID'];
+    String candidateCourse = candidateData['candidatesCourse'];
+    String imageName = candidateData['candidatesPhoto'] ??
+        'defaultImageName.png'; // Use default image name if not provided
+    Future<int> voteCountFuture = getCandidateVoteCount(candidateID, _ethClient);
+
+    return FutureBuilder(
+      future: Storage().downloadURL(imageName),
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          return FutureBuilder(
+            future: voteCountFuture,
+            builder: (context, AsyncSnapshot<int> voteCountSnapshot) {
+              if (voteCountSnapshot.connectionState ==
+                  ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else {
+                int voteCount = voteCountSnapshot.data ?? 0;
+                return buildResultCard(context, candidateName, candidateID,
+                    candidateCourse, snapshot.data!, voteCount);
+              }
+            },
+          );
+        }
+      },
     );
   }
 }

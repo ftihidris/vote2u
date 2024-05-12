@@ -146,8 +146,9 @@ class _LoadingPageState extends State<LoadingPage> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(30, 0, 30, 10),
                   child: GestureDetector(
-                    onTap: () { FirebaseAuth.instance.signOut();  
-                    Navigator.pop(context); // Close the loading page and return to the previous page
+                    onTap: () async { 
+                      await FirebaseAuth.instance.signOut();  
+                    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false); // Close the loading page and return to the previous page
                     },
                     child: Container(
                       width: double.infinity,

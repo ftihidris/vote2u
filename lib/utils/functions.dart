@@ -51,11 +51,9 @@ Future<bool> verifyVoter(String studentId, Web3Client ethClient) async {
     final contract = await loadContract();
     final result = await ethClient.call(
       contract: contract,
-      function: contract.function('isEligibleVoter'),
+      function: contract.function('verifyVoter'),
       params: [studentId],
     );
-
-
     if (result.isEmpty) {
       print('Error: Empty result received');
       return false;
@@ -69,6 +67,20 @@ Future<bool> verifyVoter(String studentId, Web3Client ethClient) async {
   }
 }
 
+Future<bool> hasUserVoted(String studentId, Web3Client ethClient) async {
+  try {
+    final contract = await loadContract();
+    final result = await ethClient.call(
+      contract: contract,
+      function: contract.function('hasVoted'),
+      params: [studentId],
+    );
+    return result[0] as bool;
+  } catch (e) {
+    print('Error checking if user has voted: $e');
+    return false;
+  }
+}
 // Gets the number of candidates by calling the 'getNumCandidates' function in the contract
 Future<int> getNumCandidates(Web3Client ethClient) async {
   List<dynamic> result = await ask('getNumCandidates', [], ethClient);
@@ -161,4 +173,62 @@ Future<bool> getElectionEnded(Web3Client ethClient) async {
     params: [],
   );
   return result[0] as bool;
+}
+
+Future<bool> isCandidateRegistered(Web3Client ethClient, String candidateId) async {
+  if (candidateId.isEmpty) {
+    print('Error: Candidate ID is empty');
+    return false;
+  }
+
+  try {
+    final contract = await loadContract();
+
+    final result = await ethClient.call(
+      contract: contract,
+      function: contract.function('isCandidateRegistered'),
+      params: [candidateId],
+    );
+
+    bool isRegistered = result[0] as bool;
+    return isRegistered;
+  } catch (e) {
+    print('Error checking candidate registration: $e');
+    return false;
+  }
+}
+
+Future<String?> getVoterAddress(Web3Client ethClient,String studentId) async {
+  try {
+    final contract = await loadContract();
+
+    final result = await ethClient.call(
+      contract: contract,
+      function: contract.function('studentIdToVoterAddress'),
+      params: [studentId],
+    );
+
+    return result[0].hex;
+  } catch (e) {
+    print('Error getting voter address: $e');
+    return null;
+  }
+}
+
+// Returns the vote count for a candidate by calling the 'getCandidateVoteCount' function in the contract
+Future<int> getCandidateVoteCount(String candidateId, Web3Client ethClient) async {
+  try {
+    final contract = await loadContract();
+
+    final result = await ethClient.call(
+      contract: contract,
+      function: contract.function('getCandidateVoteCount'),
+      params: [candidateId],
+    );
+
+    return result[0].toInt();
+  } catch (e) {
+    print('Error getting candidate vote count: $e');
+    return 0;
+  }
 }
