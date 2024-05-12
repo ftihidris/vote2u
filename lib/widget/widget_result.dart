@@ -7,7 +7,7 @@ Widget buildResultCard(
   String candidateID,
   String candidateCourse,
   String imageName,
-  {bool isWinner = false}
+  int voteCount,
 ) {
   return GestureDetector(
     child: Card(
@@ -49,7 +49,7 @@ Widget buildResultCard(
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        candidateID.toString(),
+                        candidateID,
                         style: TextStyle(
                           fontSize: 13,
                           color: Colors.grey[800],
@@ -74,16 +74,19 @@ Widget buildResultCard(
             right: 8,
             height: 40,
             child: 
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: darkPurple, // Background color
+            Container(
+              width: 150, // Set the width of the container
+              height: 25, // Set the height of the container
+              decoration: BoxDecoration(
+                color: darkPurple,
+                borderRadius: BorderRadius.circular(20)
               ),
-              onPressed: () async {
-                // Handle button press
-              },
-              child: const Text('95%', 
-              style: TextStyle (color: Colors.white, fontSize: 16),
+              child: Center(
+                child: Text(
+                 '$voteCount Votes', 
+                style: const TextStyle (color: Colors.white, fontSize: 14),
             ),
+              ),
           ),
           ),
         ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 //blockchain integration
-String infura_url =
+String infura_url=
     "_REMOVED";
 
 String owner_private_key =
@@ -11,7 +11,7 @@ String voter_private_key =
     "_REMOVED";
 
 String contractAddress1 = 
-    "0xE2505Dd1F863318d8e062022cD05FedbE5FCFCA6";
+    "0xA54d6c3b5e1b85Fca992e85A110CDd0cd992a48f";
 
 //colour
 const darkPurple = Color.fromARGB(255, 63, 41, 120);
@@ -33,3 +33,4 @@ const double elevation3 = 3;
 
 //email
 const String studentEmailDomain = "@student.uitm.edu.my";
+

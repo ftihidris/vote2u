@@ -99,22 +99,37 @@ class _VerificationState extends State<VerificationPage> {
                             isLoading = true;
                           });
                           // Retrieve current user's username from Firestore
-                          String? currentUserUsername = await getCurrentUserUsername();
-                          if (currentUserUsername != null && controller.text == currentUserUsername) {
-                            bool isVerified = await verifyVoter(controller.text, ethClient!);
+                          String? currentUserUsername =
+                              await getCurrentUserUsername();
+                          if (currentUserUsername != null &&
+                              controller.text == currentUserUsername) {
+                            bool isVerified =
+                                await verifyVoter(controller.text, ethClient!);
 
                             if (isVerified) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => VotingPage(),
-                                ),
-                              );
+                              bool hasVoted = await hasUserVoted(
+                                  controller.text, ethClient!);
+                              if (hasVoted) {
+                                showToast(
+                                    message:
+                                        "You have already voted"); // Show error message or dialog indicating user has already voted
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => VotingPage(),
+                                  ),
+                                );
+                              }
                             } else {
-                              showToast(message: "Verification failed");// Show error message or dialog indicating verification failed
+                              showToast(
+                                  message:
+                                      "Verification failed"); // Show error message or dialog indicating verification failed
                             }
                           } else {
-                            showToast(message: "Your Student ID does not match with your account");// Show error message or dialog indicating invalid student ID
+                            showToast(
+                                message:
+                                    "Your Student ID does not match with your account"); // Show error message or dialog indicating invalid student ID
                           }
                           setState(() {
                             isLoading = false;

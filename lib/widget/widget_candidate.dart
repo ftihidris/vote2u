@@ -46,7 +46,7 @@ Widget buildCardCandidate(
                   ),
                   const SizedBox(height:5),
                   Text(
-                    candidateID.toString(),
+                    candidateID,
                     style: TextStyle(
                       fontSize: 13,
                       color: Colors.grey[800],

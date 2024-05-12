@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Row(
               children: [
-                Expanded(child: buildCardWithHome(context, 'Candidate', 'assets/images/Asset 4.png')),
+                Expanded(child: buildCardWithHome(context, 'Candidates', 'assets/images/Asset 4.png')),
                 const SizedBox(width: 10),
                 Expanded(child: buildCardWithHome(context, 'Result', 'assets/images/Asset 3.png')),
               ],

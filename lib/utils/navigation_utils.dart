@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:vote2u/screen/dashboard_page.dart';
+import 'package:vote2u/screen/dashboard/dashboard_page.dart';
 import 'package:vote2u/screen/home_page.dart';
 import 'package:vote2u/screen/result/result_page.dart';
 import 'package:vote2u/screen/voting/voting_page.dart';
-//import 'package:vote2u/screen/dashboard_page.dart';
 import 'package:vote2u/screen/help_page.dart';
 import 'package:vote2u/screen/candidate_page.dart';
 import 'package:vote2u/screen/voting/verification_page.dart';
@@ -18,7 +17,7 @@ void navigateToPage(BuildContext context, String title) {
     case 'Start Voting':
       Navigator.of(context).push(MaterialPageRoute(builder: (context) => VerificationPage()));
       break;
-    case 'Candidate':
+    case 'Candidates':
       Navigator.of(context).push(MaterialPageRoute(builder: (context) => CandidatePage()));
       break;
     case 'Result':

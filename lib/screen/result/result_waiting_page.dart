@@ -19,7 +19,7 @@ class _WaitingPageState extends State<WaitingPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 120),
+            const SizedBox(height: 60),
             const Icon(
               FontAwesomeIcons.faceFrown,
               size: 90, 
