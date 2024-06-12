@@ -1,14 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:http/http.dart';
 import 'package:vote2u/utils/app_drawer.dart';
 import 'package:vote2u/widget/widget_candidate.dart';
 import 'package:vote2u/firebase/storage_services.dart';
 import 'package:vote2u/utils/constants.dart';
+import 'package:web3dart/web3dart.dart';
 
-class CandidatePage extends StatelessWidget {
+class CandidatePage extends StatefulWidget {
+  const CandidatePage({super.key});
+
+  @override
+  _CandidatePage createState() => _CandidatePage();
+}
+
+class _CandidatePage extends State<CandidatePage> {
+  Client? httpClient;
+  Web3Client? ethClient;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  CandidatePage({super.key});
+  @override
+  void initState() {
+    httpClient = Client();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

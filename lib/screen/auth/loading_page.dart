@@ -1,6 +1,9 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:vote2u/firebase/firebase_auth_services.dart';
+import 'package:vote2u/screen/auth/auth_preferences.dart';
 import 'package:vote2u/screen/home_page.dart';
 import 'package:vote2u/utils/toast.dart';
 import 'package:vote2u/utils/constants.dart';
@@ -10,10 +13,10 @@ class LoadingPage extends StatefulWidget {
   final bool isSignUp;
 
   const LoadingPage({
-    Key? key,
+    super.key,
     required this.email,
     required this.isSignUp,
-  }) : super(key: key);
+  });
 
   @override
   _LoadingPageState createState() => _LoadingPageState();
@@ -21,67 +24,75 @@ class LoadingPage extends StatefulWidget {
 
 class _LoadingPageState extends State<LoadingPage> {
   bool _isEmailVerified = false;
-  bool _canResendEmail = false;
-  late Timer _timer;
+  bool _canResendEmail = true; // Initially true to allow first send
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    _checkEmailVerification();
-    _timer = Timer.periodic(const Duration(seconds: 3), (_) {
-      _checkEmailVerified();
+    _startEmailVerificationCheck();
+  }
+
+  void _startEmailVerificationCheck() {
+    _timer = Timer.periodic(Duration(seconds: 5), (timer) async {
+      await _checkEmailVerification();
     });
   }
 
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
+  void _stopEmailVerificationCheck() {
+    _timer?.cancel();
   }
-    void _checkEmailVerified() async {
+
+  Future<void> _checkEmailVerification() async {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
-      await currentUser.reload(); // Reload user data to get the latest email verification status
+      await currentUser.reload();
+      if (!mounted) return;
       setState(() {
         _isEmailVerified = currentUser.emailVerified;
       });
-      if (!_isEmailVerified) {
-        _setupTimer(); // Start timer if email is not verified
-        _sendVerificationEmail(); // Send verification email if not already verified
+
+      if (_isEmailVerified) {
+        _stopEmailVerificationCheck();
+        if (!mounted) return;
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const HomePage()));
       }
     }
-  }
-
-  void _checkEmailVerification() {
-    _isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
-    if (!_isEmailVerified) {
-      _setupTimer();
-      _sendVerificationEmail();
-    }
-  }
-
-  void _setupTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 3), (_) {
-      _checkEmailVerified();
-    });
   }
 
   Future<void> _sendVerificationEmail() async {
     try {
       final user = FirebaseAuth.instance.currentUser!;
       await user.sendEmailVerification();
+      
+      if (!mounted) return;
 
+      // Disable the button and show toast
       setState(() => _canResendEmail = false);
+      showToast(message: "Verification email sent successfully.");
+      
+      // Enable the button after 5 seconds
       await Future.delayed(const Duration(seconds: 5));
+      if (!mounted) return;
       setState(() => _canResendEmail = true);
     } catch (e) {
-      showToast(message: "Some error occurred");
+      showToast(message: "Wait few seconds to resend email verification");
+      if (kDebugMode) {
+        print("Error sending email verification: $e");
+      }
     }
   }
 
   @override
+  void dispose() {
+    _stopEmailVerificationCheck();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) => _isEmailVerified
-      ? HomePage()
+      ? const HomePage()
       : Scaffold(
           body: Center(
             child: Column(
@@ -130,7 +141,7 @@ class _LoadingPageState extends State<LoadingPage> {
                       width: double.infinity,
                       height: mediumSizeBox,
                       decoration: BoxDecoration(
-                        color: darkPurple,
+                        color: _canResendEmail ? darkPurple : Colors.grey[300],
                         borderRadius: largeBorderRadius,
                       ),
                       child: const Center(
@@ -146,9 +157,19 @@ class _LoadingPageState extends State<LoadingPage> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(30, 0, 30, 10),
                   child: GestureDetector(
-                    onTap: () async { 
-                      await FirebaseAuth.instance.signOut();  
-                    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false); // Close the loading page and return to the previous page
+                    onTap: () async {
+                      try {
+                        await FirebaseAuthService().signOut();
+                        AuthPreferences.storeUserLoggedInState(false, false);
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/login', (route) => false);
+                      } catch (e) {
+                        if (kDebugMode) {
+                          print('Error signing out: $e');
+                        }
+                        showToast(
+                            message: 'An error occurred. Please try again later.');
+                      }
                     },
                     child: Container(
                       width: double.infinity,

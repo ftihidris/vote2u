@@ -9,7 +9,7 @@ import 'package:vote2u/widget/widget_dashboard.dart';
 import 'package:web3dart/web3dart.dart';
 
 class DashboardPage extends StatefulWidget {
-  DashboardPage({Key? key});
+  const DashboardPage({super.key});
 
   @override
   _DashboardPage createState() => _DashboardPage();
@@ -54,7 +54,6 @@ class _DashboardPage extends State<DashboardPage> {
       body: _buildBody(ethClient),
     );
   }
-
   Widget _buildBody(Web3Client ethClient) {
     return Column(
       children: [
@@ -173,7 +172,7 @@ class _DashboardPage extends State<DashboardPage> {
 
   Widget _buildChartCard(Web3Client ethClient) {
   return Padding(
-    padding: const EdgeInsets.fromLTRB(15, 0, 15, 25),
+    padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
     child: SizedBox(
       height: 400, // Adjust the height as needed
           child: Column(
@@ -182,7 +181,7 @@ class _DashboardPage extends State<DashboardPage> {
               Expanded(
                 child: buildCardChart(
                   'Comparison of Candidates Result', 
-                  CandidateChart(),
+                  const CandidateChart(),
                 ),
               ),
             ],

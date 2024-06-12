@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vote2u/screen/dashboard/dashboard_page.dart';
 import 'package:vote2u/screen/home_page.dart';
 import 'package:vote2u/screen/result/result_page.dart';
+import 'package:vote2u/screen/settings_page.dart';
 import 'package:vote2u/screen/voting/voting_page.dart';
 import 'package:vote2u/screen/help_page.dart';
 import 'package:vote2u/screen/candidate_page.dart';
@@ -12,22 +13,25 @@ import 'package:web3dart/web3dart.dart';
 void navigateToPage(BuildContext context, String title) {
   switch (title) {
     case 'Home':
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
       break;
     case 'Start Voting':
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => VerificationPage()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const VerificationPage()));
       break;
     case 'Candidates':
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => CandidatePage()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CandidatePage()));
       break;
     case 'Result':
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => ResultPage()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ResultPage()));
       break;
     case 'Dashboard':
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => DashboardPage()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const DashboardPage()));
       break;
     case 'Need Help?':
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => HelpPage()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HelpPage()));
+      break;
+    case 'Settings':
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SettingsPage()));
       break;
     default:
   }
@@ -40,7 +44,7 @@ void navigateToVoting(
 
   switch (title) {
     case 'Voting':
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => VotingPage()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const VotingPage()));
       break;
           default:
   }

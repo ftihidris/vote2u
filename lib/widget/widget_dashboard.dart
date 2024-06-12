@@ -90,15 +90,15 @@ Widget buildCardChart(String title, Widget chartWidget) {
   return buildCardDashboard(
     title: title,
     child: Card(
-      margin: const EdgeInsets.symmetric(horizontal:16),
+      margin: const EdgeInsets.symmetric(horizontal:15),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: mediumBorderRadius,
       ),
       clipBehavior: Clip.antiAliasWithSaveLayer,
       elevation: null,
       child: ConstrainedBox(
         constraints: const BoxConstraints(
-          maxHeight: 298, // Limit the height of the chartWidget
+          maxHeight: 318, // Limit the height of the chartWidget
         ),
         child: chartWidget,
       ),
