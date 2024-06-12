@@ -1,12 +1,14 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vote2u/firebase/firebase_auth_services.dart';
 import 'package:vote2u/utils/navigation_utils.dart';
 import 'package:vote2u/screen/auth/auth_preferences.dart';
 import 'package:vote2u/utils/constants.dart';
 
 class AppDrawer extends StatelessWidget {
-  const AppDrawer({Key? key});
+  const AppDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -100,17 +102,26 @@ class AppDrawer extends StatelessWidget {
                           navigateToPage(context, 'Need Help?');
                         },
                       ),
+                      ListTile(
+                        title: const Text('Settings'),
+                        textColor: darkPurple,
+                        onTap: () {
+                          navigateToPage(context, 'Settings');
+                        },
+                      )
                     ],
                   ),
                   const Spacer(),
                   GestureDetector(
                     onTap: () async {
                       try {
-                        await FirebaseAuth.instance.signOut();
-                        await AuthPreferences.storeUserLoggedInState(false, false);
+                        await FirebaseAuthService().signOut();
+                        AuthPreferences.storeUserLoggedInState(false, false);
                         Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
                       } catch (e) {
-                        print('Error signing out: $e');
+                        if (kDebugMode) {
+                          print('Error signing out: $e');
+                        }
                         // Handle sign out error
                       }
                     },

@@ -3,10 +3,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vote2u/utils/app_drawer.dart';
 import 'package:vote2u/utils/constants.dart';
 
-class HelpPage extends StatelessWidget {
+class HelpPage extends StatefulWidget {
+  const HelpPage({super.key});
+
+  @override
+  _HelpPage createState() => _HelpPage();
+}
+class _HelpPage extends State<HelpPage> {
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  HelpPage({super.key});
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

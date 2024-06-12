@@ -1,11 +1,12 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:vote2u/screen/auth/auth_preferences.dart';
-import 'package:vote2u/screen/home_screen.dart';
+import 'package:vote2u/screen/on_boarding_page.dart';
 import 'package:vote2u/screen/auth/login_page.dart'; 
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key});
+  const SplashScreen({super.key});
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -22,12 +23,16 @@ class _SplashScreenState extends State<SplashScreen> {
     try {
       // Check if the user is logged in
       bool isLoggedIn = await AuthPreferences.getUserLoggedInState();
-      print('User logged in status: $isLoggedIn'); // Add logging
+      if (kDebugMode) {
+        print('User logged in status: $isLoggedIn');
+      } // Add logging
 
       // Navigate based on login status
       navigateToNextScreen(isLoggedIn);
     } catch (error) {
-      print('Error checking login status: $error'); // Add error handling
+      if (kDebugMode) {
+        print('Error checking login status: $error');
+      } // Add error handling
       // Navigate to login page in case of error
       navigateToNextScreen(false);
     }
@@ -35,11 +40,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void navigateToNextScreen(bool isLoggedIn) {
     // Determine the next screen based on login status
-    Widget nextScreen = isLoggedIn ? const HomeScreen() : const LoginPage();
+    Widget nextScreen = isLoggedIn ? const GetStarted() : const LoginPage();
 
     // If the user is not logged in, redirect them to the HomeScreen
     if (!isLoggedIn) {
-      nextScreen = const HomeScreen();
+      nextScreen = const GetStarted();
     }
 
     // Simulate a delay for the splash screen
