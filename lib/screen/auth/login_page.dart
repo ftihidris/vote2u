@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:vote2u/screen/auth/loading_page.dart';
 import 'package:vote2u/screen/auth/signup_page.dart';
 import 'package:vote2u/screen/home_page.dart';
 import 'package:vote2u/utils/toast.dart';
@@ -176,7 +175,7 @@ class _LoginPageState extends State<LoginPage> {
         showToast(message: "User is successfully signed in");
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => LoadingPage(email: email, isSignUp: true)),
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
       } else {
         showToast(message: "Sign in failed");
@@ -218,7 +217,7 @@ void _signInWithGoogle() async {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
       }
     }

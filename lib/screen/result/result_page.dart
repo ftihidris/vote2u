@@ -11,26 +11,26 @@ import 'package:vote2u/utils/functions.dart';
 import 'package:web3dart/web3dart.dart';
 
 class ResultPage extends StatefulWidget {
-  ResultPage({Key? key});
+  const ResultPage({super.key});
 
   @override
   _ResultPage createState() => _ResultPage();
 }
 
 class _ResultPage extends State<ResultPage> {
-  late Client _httpClient;
-  late Web3Client _ethClient;
+  late Client httpClient;
+  late Web3Client ethClient;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Future<BigInt> _numCandidatesToWin = Future.value(BigInt.zero);
-  int? _numWinners;
+  Future<BigInt> numCandidatesToWin = Future.value(BigInt.zero);
+  int? numWinners;
 
   @override
   void initState() {
     super.initState();
-    _httpClient = http.Client();
-    _ethClient = Web3Client(infura_url, _httpClient);
-    _numCandidatesToWin = getNumCandidatesToWin(_ethClient);
+    httpClient = http.Client();
+    ethClient = Web3Client(infura_url, httpClient);
+    numCandidatesToWin = getNumCandidatesToWin(ethClient);
   }
 
   @override
@@ -58,7 +58,7 @@ class _ResultPage extends State<ResultPage> {
       ),
       drawer: const AppDrawer(),
       body: FutureBuilder(
-        future: getElectionEnded(_ethClient),
+        future: getElectionEnded(ethClient),
         builder: (context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -74,14 +74,14 @@ class _ResultPage extends State<ResultPage> {
             return Column(
               children: [
                 FutureBuilder(
-                  future: _numCandidatesToWin,
+                  future: numCandidatesToWin,
                   builder: (context, AsyncSnapshot<BigInt> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else {
-                      _numWinners = snapshot.data!.toInt();
+                      numWinners = snapshot.data!.toInt();
                       return Column(
                         children: [
                           Padding(
@@ -90,7 +90,7 @@ class _ResultPage extends State<ResultPage> {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    'Top $_numWinners Winners',
+                                    'Top $numWinners Winners',
                                     textAlign: TextAlign.left,
                                     style: const TextStyle(
                                         fontSize: 35,
@@ -114,7 +114,7 @@ class _ResultPage extends State<ResultPage> {
                                 List<Map<String, dynamic>> candidates = snapshot.data!.docs.map((DocumentSnapshot document) =>document.data() as Map<String, dynamic>).toList();
                                  // Fetch vote counts for all candidates
                                 Future<List<int>> voteCountsFuture =Future.wait(candidates.map((candidate) async {
-                                  return await getCandidateVoteCount(candidate['candidatesID'], _ethClient);
+                                  return await getCandidateVoteCount(candidate['candidatesID'], ethClient);
                                 }));
 
                                 return FutureBuilder(
@@ -149,7 +149,7 @@ class _ResultPage extends State<ResultPage> {
                                               children: [
                                                 _buildResultCard(context,candidateData,getCandidateVoteCount),
                                                 if (sortedCandidates.indexOf(
-                                                        candidateData) ==_numWinners! - 1) // Add container below the _numWinners-th card
+                                                        candidateData) ==numWinners! - 1) // Add container below the _numWinners-th card
                                                   Container(
                                                     decoration:
                                                         const BoxDecoration(
@@ -198,7 +198,7 @@ class _ResultPage extends State<ResultPage> {
     String candidateCourse = candidateData['candidatesCourse'];
     String imageName = candidateData['candidatesPhoto'] ??
         'defaultImageName.png'; // Use default image name if not provided
-    Future<int> voteCountFuture = getCandidateVoteCount(candidateID, _ethClient);
+    Future<int> voteCountFuture = getCandidateVoteCount(candidateID, ethClient);
 
     return FutureBuilder(
       future: Storage().downloadURL(imageName),

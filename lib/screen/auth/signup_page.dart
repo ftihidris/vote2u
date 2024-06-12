@@ -77,7 +77,6 @@ Widget build(BuildContext context) {
                  Expanded(
                   child: FormContainerWidget(controller: _firstNameController,
                   hintText: "First Name",
-                  isPasswordField: false,
                   ),
                   ),
                   const SizedBox(width: 10),
@@ -85,7 +84,6 @@ Widget build(BuildContext context) {
                     child: FormContainerWidget(
                       controller: _lastNameController,
                       hintText: "Last Name",
-                      isPasswordField: false,
                       ),
                       ),
                       ],
@@ -96,13 +94,11 @@ Widget build(BuildContext context) {
             FormContainerWidget(
               controller: _usernameController,
               hintText: "Student ID",
-              isPasswordField: false,
             ),
             const SizedBox(height: 10),
             FormContainerWidget(
               controller: _emailController,
               hintText: "Email",
-              isPasswordField: false,
             ),
             const SizedBox(
               height: 10,

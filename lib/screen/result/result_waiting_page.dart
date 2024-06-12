@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:vote2u/utils/constants.dart';
 
 class WaitingPage extends StatefulWidget {
-  const WaitingPage({Key? key}) : super(key: key);
+  const WaitingPage({super.key});
 
   @override
   _WaitingPageState createState() => _WaitingPageState();
@@ -37,7 +37,7 @@ class _WaitingPageState extends State<WaitingPage> {
             ),
             const SizedBox(height: 20),
             const Text(
-              "Sorry, the result for the election\nis not available until the\nelection end.",
+              "Sorry, the election results\nwill be available once the\nelection has ended",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
@@ -49,7 +49,7 @@ class _WaitingPageState extends State<WaitingPage> {
                 onTap: () {
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
+                    MaterialPageRoute(builder: (context) => const HomePage()),
                     (route) => false,
                   );
                 },
