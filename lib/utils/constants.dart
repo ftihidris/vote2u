@@ -13,9 +13,6 @@ String owner_private_key =
 String voter_private_key =
     "_REMOVED";
 
-String contractAddress1 = 
-    "0x0a2957A708Fa70C672C9fd58e903Af1685127FdA";
-
 //colour
 const darkPurple = Color.fromARGB(255, 63, 41, 120);
 const softPurple = Color.fromARGB(255, 131, 121, 205);
@@ -35,5 +32,5 @@ const double elevation2 = 2;
 const double elevation3 = 3;
 
 //email
-const String studentEmailDomain = "@gmail.com";
+const String studentEmailDomain = "@student.uitm.edu.my";
 

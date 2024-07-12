@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:vote2u_admin/utils/constants.dart';
-import 'package:vote2u_admin/utils/navigation_utils.dart';
+import 'package:vote2u/utils/constants.dart';
+import 'package:vote2u/utils/navigation_utils.dart';
 
 Widget buildCardWithHome(BuildContext context, String title, String imagePath) {
   return GestureDetector(
