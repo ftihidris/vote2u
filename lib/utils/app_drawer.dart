@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vote2u/firebase/firebase_auth_services.dart';
-import 'package:vote2u/utils/navigation_utils.dart';
-import 'package:vote2u/screen/auth/auth_preferences.dart';
-import 'package:vote2u/utils/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; 
+import 'package:vote2u_admin/firebase/firebase_auth_services.dart';
+import 'package:vote2u_admin/utils/navigation_utils.dart';
+import 'package:vote2u_admin/screen/auth/auth_preferences.dart';
+import 'package:vote2u_admin/utils/constants.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -68,38 +68,38 @@ class AppDrawer extends StatelessWidget {
                         },
                       ),
                       ListTile(
-                        title: const Text('Start Voting'),
+                        title: const Text('Election'),
                         textColor: darkPurple,
                         onTap: () {
-                          navigateToPage(context, 'Start Voting');
+                          navigateToPage(context, 'Election');
                         },
                       ),
                       ListTile(
-                        title: const Text('Candidate'),
+                        title: const Text('Candidates List'),
                         textColor: darkPurple,
                         onTap: () {
-                          navigateToPage(context, 'Candidate');
+                          navigateToPage(context, 'Candidates List');
                         },
                       ),
                       ListTile(
-                        title: const Text('Result'),
+                        title: const Text('Add Candidates'),
                         textColor: darkPurple,
                         onTap: () {
-                          navigateToPage(context, 'Result');
+                          navigateToPage(context, 'Add Candidates');
                         },
                       ),
                       ListTile(
-                        title: const Text('Dashboard'),
+                        title: const Text('Add Voters'),
                         textColor: darkPurple,
                         onTap: () {
-                          navigateToPage(context, 'Dashboard');
+                          navigateToPage(context, 'Add Voters');
                         },
                       ),
                       ListTile(
-                        title: const Text('Need Help?'),
+                        title: const Text('Voters List'),
                         textColor: darkPurple,
                         onTap: () {
-                          navigateToPage(context, 'Need Help?');
+                          navigateToPage(context, 'Voters List');
                         },
                       ),
                       ListTile(

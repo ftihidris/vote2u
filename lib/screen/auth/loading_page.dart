@@ -2,11 +2,11 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:vote2u/firebase/firebase_auth_services.dart';
-import 'package:vote2u/screen/auth/auth_preferences.dart';
-import 'package:vote2u/screen/home_page.dart';
-import 'package:vote2u/utils/toast.dart';
-import 'package:vote2u/utils/constants.dart';
+import 'package:vote2u_admin/firebase/firebase_auth_services.dart';
+import 'package:vote2u_admin/screen/auth/auth_preferences.dart';
+import 'package:vote2u_admin/screen/home_page.dart';
+import 'package:vote2u_admin/utils/toast.dart';
+import 'package:vote2u_admin/utils/constants.dart';
 
 class LoadingPage extends StatefulWidget {
   final String email;
@@ -34,7 +34,7 @@ class _LoadingPageState extends State<LoadingPage> {
   }
 
   void _startEmailVerificationCheck() {
-    _timer = Timer.periodic(Duration(seconds: 5), (timer) async {
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) async {
       await _checkEmailVerification();
     });
   }
