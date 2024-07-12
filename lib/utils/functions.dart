@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:web3dart/web3dart.dart';
-import 'package:vote2u/utils/constants.dart';
+import 'package:vote2u_admin/utils/constants.dart';
 
 // Loads the contract and returns a [DeployedContract] object
 Future<DeployedContract> loadContract() async {
@@ -47,6 +47,127 @@ Future<String> callFunction(String funcName, List<dynamic> args,
     fetchChainIdFromNetworkId: true,
   );
   return result;
+}
+// Starts the election by calling the 'startElection' function in the contract
+Future<String> startElection(Web3Client ethClient, String privateKey) async {
+  try {
+    final contract = await loadContract();
+    final ethFunction = contract.function('startElection');
+    final result = await ethClient.sendTransaction(
+      EthPrivateKey.fromHex(privateKey),
+      Transaction.callContract(
+        contract: contract,
+        function: ethFunction,
+        parameters: [],
+      ),
+      chainId: null,
+      fetchChainIdFromNetworkId: true,
+    );
+    return result; // Return the transaction hash as a String
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error starting election: $e');
+    }
+    return ''; // Return an empty string on error
+  }
+}
+
+// Ends the election by calling the 'endElection' function in the contract
+Future<String> endElection(Web3Client ethClient, String privateKey) async {
+  try {
+    final contract = await loadContract();
+    final ethFunction = contract.function('endElection');
+    final result = await ethClient.sendTransaction(
+      EthPrivateKey.fromHex(privateKey),
+      Transaction.callContract(
+        contract: contract,
+        function: ethFunction,
+        parameters: [],
+      ),
+      chainId: null,
+      fetchChainIdFromNetworkId: true,
+    );
+    return result; // Return the transaction hash as a String
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error ending election: $e');
+    }
+    return ''; // Return an empty string on error
+  }
+}
+
+// Add a candidate
+Future<String> addCandidate(String candidateId, String name, String course, Web3Client ethClient, String privateKey) async {
+  try {
+    final contract = await loadContract();
+    final ethFunction = contract.function('addCandidate');
+    final result = await ethClient.sendTransaction(
+      EthPrivateKey.fromHex(privateKey),
+      Transaction.callContract(
+        contract: contract,
+        function: ethFunction,
+        parameters: [candidateId, name, course],
+      ),
+      chainId: null,
+      fetchChainIdFromNetworkId: true,
+    );
+    return result; // Return the transaction hash as a String
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error adding candidate: $e');
+    }
+    return ''; // Return an empty string on error
+  }
+}
+
+// Add a voter
+Future<String> addVoter(String studentId, Web3Client ethClient, String privateKey) async {
+  try {
+    final contract = await loadContract();
+    final ethFunction = contract.function('addVoter');
+    final params = [studentId]; // Pass the voterId as a parameter
+    final result = await ethClient.sendTransaction(
+      EthPrivateKey.fromHex(privateKey),
+      Transaction.callContract(
+        contract: contract,
+        function: ethFunction,
+        parameters: params, // Pass the params here
+      ),
+      chainId: null,
+      fetchChainIdFromNetworkId: true,
+    );
+    return result; // Return the transaction hash as a String
+  } catch (e) {
+    // Catch any exceptions that occur during the transaction
+    if (kDebugMode) {
+      print('Error adding voter: $e');
+    }
+    return ''; // Return an empty string on error
+  }
+}
+
+// Add bulk voters
+Future<String> addBulkVoters(List<String> studentIds, Web3Client ethClient, String privateKey) async {
+  try {
+    final contract = await loadContract();
+    final ethFunction = contract.function('addBulkVoters');
+    final result = await ethClient.sendTransaction(
+      EthPrivateKey.fromHex(privateKey),
+      Transaction.callContract(
+        contract: contract,
+        function: ethFunction,
+        parameters: [studentIds],
+      ),
+      chainId: null,
+      fetchChainIdFromNetworkId: true,
+    );
+    return result; // Return the transaction hash as a String
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error adding bulk voters: $e');
+    }
+    return '';
+  }
 }
 
 // Gets the election name
@@ -137,38 +258,6 @@ Future<List<dynamic>> candidateInfo(
   return result;
 }
 
-// Votes for a candidate by calling the 'vote' function in the contract
-Future<String> vote(List<String> candidateIds, Web3Client ethClient) async {
-  try {
-    final contract = await loadContract();
-    final function = contract.function('vote');
-
-    // Ensure the voter's Ethereum address is available
-
-    // Call the 'vote' function on the contract
-    final result = await ethClient.sendTransaction(
-      EthPrivateKey.fromHex(voter_private_key),
-      Transaction.callContract(
-        contract: contract,
-        function: function,
-        parameters: [candidateIds],
-      ),
-      chainId: null,
-      fetchChainIdFromNetworkId: true,
-    );
-
-    if (kDebugMode) {
-      print('Vote counted successfully');
-    }
-    return result;
-  } catch (e) {
-    if (kDebugMode) {
-      print('Error voting: $e');
-    }
-    return 'Error: $e';
-  }
-}
-
 Future<BigInt> getNumCandidatesToWin(Web3Client ethClient) async {
   final contract = await loadContract();
   final function = contract.function('getNumCandidatesToWin');
@@ -220,7 +309,26 @@ Future<List<dynamic>> getCandidates(Web3Client ethClient) async {
     return [];
   }
 }
+ // Checks if the election has started
+Future<bool> getElectionStarted(Web3Client ethClient) async {
+  try {
+    final contract = await loadContract();
 
+    final result = await ethClient.call(
+      contract: contract,
+      function: contract.function('hasElectionStarted'),
+      params: [],
+    );
+
+    return result[0] as bool;
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error checking if election has started: $e');
+    }
+    return false;
+  }
+}
+ // Checks if the election has ended
 Future<bool> getElectionEnded(Web3Client ethClient) async {
   final contract = await loadContract();
 

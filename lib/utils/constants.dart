@@ -14,7 +14,7 @@ String voter_private_key =
     "22de701d02b76c6ac7d0a920e5a1efb0e71c295ade78722bd4f4dc0694edc1a5";
 
 String contractAddress1 = 
-    "0x5421E9D1E52121CF2B16AfeDDA0E46F9F3E9B3ad";
+    "0x0a2957A708Fa70C672C9fd58e903Af1685127FdA";
 
 //colour
 const darkPurple = Color.fromARGB(255, 63, 41, 120);

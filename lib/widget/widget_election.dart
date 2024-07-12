@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vote2u/utils/constants.dart';
+import 'package:vote2u_admin/utils/constants.dart';
 
 // Extracted common card widget
 Widget buildCardDashboard({
@@ -41,6 +41,41 @@ Widget buildCardDashboard({
   );
 }
 
+Widget buildCardElection(
+  String title,
+  Function onTap,
+  MaterialColor color,
+) {
+  return GestureDetector(
+    onTap: () async {
+      await onTap();
+    },
+    child: Card(
+      color: color,
+      shape: RoundedRectangleBorder(
+        borderRadius: mediumBorderRadius,
+      ),
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      elevation: elevation2,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
 // Improved buildCardTotal
 Widget buildCardTotal(String title, int totalNumber) {
   return buildCardDashboard(
@@ -58,7 +93,8 @@ Widget buildCardTotal(String title, int totalNumber) {
 }
 
 // Improved buildCardPercentage
-Widget buildCardPercentage(String title, Widget? subtitleWidget, double percentageVoter) {
+Widget buildCardPercentage(
+    String title, Widget? subtitleWidget, double percentageVoter) {
   return buildCardDashboard(
     title: title,
     child: Column(
@@ -90,7 +126,7 @@ Widget buildCardChart(String title, Widget chartWidget) {
   return buildCardDashboard(
     title: title,
     child: Card(
-      margin: const EdgeInsets.symmetric(horizontal:15),
+      margin: const EdgeInsets.symmetric(horizontal: 15),
       shape: RoundedRectangleBorder(
         borderRadius: mediumBorderRadius,
       ),
