@@ -1,17 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vote2u_admin/utils/constants.dart';
-import 'package:vote2u_admin/utils/toast.dart';
+import 'package:vote2u/utils/constants.dart';
+import 'package:vote2u/utils/toast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  Stream<User?> get authStateChanges => _auth.authStateChanges();
+  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
   // Method to store user's login state using shared preferences
   Future<void> _storeUserLoggedInState(bool isLoggedIn) async {
@@ -47,12 +51,14 @@ class FirebaseAuthService {
       // Send email verification
       await credential.user!.sendEmailVerification();
 
+      final fcmToken = await _messaging.getToken();
 
       // Store user information in Firestore users collection
       await _firestore.collection('users').doc(credential.user!.uid).set({
         'username': username,
         'firstName': firstName,
         'lastName': lastName,
+        'fcmtoken': fcmToken,
       });
 
       // Store login state after successful sign-up
@@ -216,4 +222,85 @@ class FirebaseAuthService {
       throw Exception('Failed to reauthenticate user: $e');
     }
   }
+
+  Future<void> initNotifications() async {
+  try {
+    // Request permissions for iOS
+    await _messaging.requestPermission();
+
+    // Get the token for this device
+    final fcmToken = await _messaging.getToken();
+    if (kDebugMode) {
+      print('FCM Token: $fcmToken');
+    }
+
+    // Optionally, handle token refresh using the instance
+    _messaging.onTokenRefresh.listen((newToken) {
+      if (kDebugMode) {
+        print('Token refreshed: $newToken');
+      }
+      // Handle token refresh as needed
+    });
+
+    // Configure background and foreground message handlers
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (kDebugMode) {
+        print('Received a message while in the foreground: ${message.messageId}');
+      }
+      // Handle your message and show notification with custom behavior
+      _showNotification(message);
+    });
+
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error initializing notifications: $e');
+    }
+    showToast(message: 'An error occurred while initializing notifications.');
+  }
+}
+// Function to handle incoming messages and show notification with custom behavior
+void _showNotification(RemoteMessage message) {
+  // Extract notification data
+  final notification = message.notification;
+  final data = message.data;
+
+  // Customize notification behavior
+  var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
+    'high_importance_channel', // Channel ID
+    'High Importance Notifications', // Channel name
+    importance: Importance.max,
+    priority: Priority.high,
+    playSound: true,
+    ticker: 'ticker',
+    enableVibration: true,
+    fullScreenIntent: true,
+    styleInformation: DefaultStyleInformation(true, true), // Popup notification
+  );
+
+  var platformChannelSpecifics =
+      NotificationDetails(android: androidPlatformChannelSpecifics);
+
+  // Display the notification
+  flutterLocalNotificationsPlugin.show(
+    0, // Notification ID
+    notification!.title, // Notification title
+    notification.body, // Notification body
+    platformChannelSpecifics,
+    payload: data['data'], // Optional payload
+  );
+}
+// Inside your `FirebaseAuthService` class
+static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  if (kDebugMode) {
+    print('ID: ${message.messageId}');
+    print('Title: ${message.notification?.title}');
+    print('Body: ${message.notification?.body}');
+    print('Payload: ${message.data}');
+  }
+  // Handle your background message logic here
+}
+
+
 }

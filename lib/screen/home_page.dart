@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:vote2u_admin/firebase/firebase_auth_services.dart';
-import 'package:vote2u_admin/utils/app_drawer.dart';
-import 'package:vote2u_admin/utils/functions.dart';
-import 'package:vote2u_admin/widget/widget_home.dart';
-import 'package:vote2u_admin/screen/auth/loading_page.dart';
-import 'package:vote2u_admin/utils/constants.dart';
+import 'package:vote2u/firebase/firebase_auth_services.dart';
+import 'package:vote2u/utils/app_drawer.dart';
+import 'package:vote2u/utils/functions.dart';
+import 'package:vote2u/widget/widget_home.dart';
+import 'package:vote2u/screen/auth/loading_page.dart';
+import 'package:vote2u/utils/constants.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -19,7 +19,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final PageController _pageController = PageController();
+  final PageController _pageController =
+      PageController(); // Add a PageController
   Client? httpClient;
   Web3Client? ethClient;
   String electionName = '';
@@ -28,6 +29,8 @@ class _HomePageState extends State<HomePage> {
   bool userVoted = false;
   String voterStatus = 'Not Vote';
   String? currentUserUsername;
+  final FirebaseAuthService _authService =
+      FirebaseAuthService(); // Initialize FirebaseAuthService
 
   @override
   void initState() {
@@ -41,19 +44,19 @@ class _HomePageState extends State<HomePage> {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
     if (user != null) {
-      currentUserUsername =
-          await FirebaseAuthService().getCurrentUserUsername();
+      currentUserUsername = await _authService
+          .getCurrentUserUsername(); // Use FirebaseAuthService to get current user username
       _fetchElectionData(ethClient);
     }
   }
-
   Future<void> _fetchElectionData(ethClient) async {
     if (currentUserUsername == null) return;
 
     final electionNameResult = await getElectionName(ethClient);
     final electionStartedResult = await getElectionStarted(ethClient);
     final electionEndedResult = await getElectionEnded(ethClient);
-    final userVotedResult = await hasUserVoted(currentUserUsername!, ethClient);
+    final userVotedResult = await hasUserVoted(
+        currentUserUsername!, ethClient); // Use current user's username
 
     if (!mounted) return;
 
@@ -72,9 +75,9 @@ class _HomePageState extends State<HomePage> {
     final User? user = auth.currentUser;
 
     if (user != null && !user.emailVerified) {
+      // User is not verified, show verification screen
       return LoadingPage(email: user.email!, isSignUp: true);
     }
-
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -101,163 +104,89 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       drawer: const AppDrawer(),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          if (constraints.maxWidth > 600) {
-            return buildWideLayout();
-          } else {
-            return buildNarrowLayout();
-          }
-        },
-      ),
-    );
-  }
-
-  Widget buildWideLayout() {
-    return Stack(
-      children: [
-        ListView(
-          children: [
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50),
-              child: buildCardWithHome(
-                  context, 'Election', 'assets/images/Asset 5.png'),
-            ),
-            Column(
-              children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                  child: Column(
-                    children: [
-                      Row(
+      body: Stack(
+        children: [
+          ListView(
+            children: [
+              const SizedBox(height: 20),
+              // First Row with PageView
+              SizedBox(
+                height: 235, // Adjust height as needed
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: PageView(
+                        controller: _pageController,
                         children: [
-                          Expanded(
-                              child: buildCardWithHome(
-                                  context,
-                                  'Add Candidates',
-                                  'assets/images/Asset 4.png')),
-                          const SizedBox(width: 10),
-                          Expanded(
-                              child: buildCardWithHome(
-                                  context,
-                                  'Candidates List',
-                                  'assets/images/Asset 3.png')),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 15), // Add padding here
+                            child: buildCardStatus(context, 'For You', 
+                            electionName, electionStarted, electionEnded, voterStatus),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 15), // Add padding here
+                            child: buildCardWithHome(context, 'Start Voting',
+                                'assets/images/Asset 5.png'),
+                          ),
                         ],
                       ),
-                      const SizedBox(height: 15),
-                      Row(
-                        children: [
-                          Expanded(
-                              child: buildCardWithHome(context, 'Add Voters',
-                                  'assets/images/Asset 2.png')),
-                          const SizedBox(width: 10),
-                          Expanded(
-                              child: buildCardWithHome(context, 'Voters List',
-                                  'assets/images/Asset 1.png')),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget buildNarrowLayout() {
-    return Stack(
-      children: [
-        ListView(
-          children: [
-            const SizedBox(height: 20),
-            SizedBox(
-              height: 235,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: PageView(
+                    ),
+                    const SizedBox(height: 15),
+                    SmoothPageIndicator(
                       controller: _pageController,
+                      count: 2,
+                      effect: const WormEffect(
+                        dotHeight: 8,
+                        dotWidth: 8,
+                        activeDotColor: darkPurple,
+                        dotColor: softPurple,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Second Row with four cards
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(15), // Add padding here
+                    child: Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: buildCardStatus(
-                              context,
-                              'For You',
-                              electionName,
-                              electionStarted,
-                              electionEnded,
-                              voterStatus),
+                        Row(
+                          children: [
+                            Expanded(
+                                child: buildCardWithHome(context, 'Candidates',
+                                    'assets/images/Asset 4.png')),
+                            const SizedBox(width: 10),
+                            Expanded(
+                                child: buildCardWithHome(context, 'Result',
+                                    'assets/images/Asset 3.png')),
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: buildCardWithHome(
-                              context, 'Election', 'assets/images/Asset 5.png'),
+                        const SizedBox(height: 15),
+                        Row(
+                          children: [
+                            Expanded(
+                                child: buildCardWithHome(context, 'Dashboard',
+                                    'assets/images/Asset 2.png')),
+                            const SizedBox(width: 10),
+                            Expanded(
+                                child: buildCardWithHome(context, 'Need Help?',
+                                    'assets/images/Asset 1.png')),
+                          ],
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 15),
-                  SmoothPageIndicator(
-                    controller: _pageController,
-                    count: 2,
-                    effect: const WormEffect(
-                      dotHeight: 8,
-                      dotWidth: 8,
-                      activeDotColor: darkPurple,
-                      dotColor: softPurple,
-                    ),
-                  ),
                 ],
               ),
-            ),
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                              child: buildCardWithHome(
-                                  context,
-                                  'Add Candidates',
-                                  'assets/images/Asset 4.png')),
-                          const SizedBox(width: 10),
-                          Expanded(
-                              child: buildCardWithHome(
-                                  context,
-                                  'Candidates List',
-                                  'assets/images/Asset 3.png')),
-                        ],
-                      ),
-                      const SizedBox(height: 15),
-                      Row(
-                        children: [
-                          Expanded(
-                              child: buildCardWithHome(context, 'Add Voters',
-                                  'assets/images/Asset 2.png')),
-                          const SizedBox(width: 10),
-                          Expanded(
-                              child: buildCardWithHome(context, 'Voters List',
-                                  'assets/images/Asset 1.png')),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-          ],
-        ),
-      ],
+              const SizedBox(height: 10),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

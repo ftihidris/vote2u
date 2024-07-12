@@ -11,10 +11,7 @@ String owner_private_key =
 
 // ignore: non_constant_identifier_names
 String voter_private_key =
-    "22de701d02b76c6ac7d0a920e5a1efb0e71c295ade78722bd4f4dc0694edc1a5";
-
-String contractAddress1 = 
-    "0x0a2957A708Fa70C672C9fd58e903Af1685127FdA";
+    "b41f68564dc81ebc6ec71c4b809e203d69934cb1aa5ec73fdf9f8ef649577188";
 
 //colour
 const darkPurple = Color.fromARGB(255, 63, 41, 120);
@@ -35,5 +32,5 @@ const double elevation2 = 2;
 const double elevation3 = 3;
 
 //email
-const String studentEmailDomain = "@gmail.com";
+const String studentEmailDomain = "@student.uitm.edu.my";
 

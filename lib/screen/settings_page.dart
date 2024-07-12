@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:vote2u_admin/firebase/firebase_auth_services.dart';
-import 'package:vote2u_admin/utils/app_drawer.dart';
-import 'package:vote2u_admin/utils/constants.dart';
-import 'package:vote2u_admin/utils/toast.dart';
+import 'package:vote2u/firebase/firebase_auth_services.dart';
+import 'package:vote2u/utils/app_drawer.dart';
+import 'package:vote2u/utils/constants.dart';
+import 'package:vote2u/utils/toast.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});

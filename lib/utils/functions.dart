@@ -1,17 +1,27 @@
 import 'package:flutter/foundation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import 'package:flutter/services.dart';
 import 'package:web3dart/web3dart.dart';
-import 'package:vote2u_admin/utils/constants.dart';
+import 'package:vote2u/utils/constants.dart';
+
+// Function to get contract address from Firestore
+Future<String> getContractAddressFromFirestore() async {
+  firestore.FirebaseFirestore firestoreInstance = firestore.FirebaseFirestore.instance;
+  firestore.DocumentSnapshot doc = await firestoreInstance.collection('election').doc('TdpVaSNP0u9LSxmujuGD').get();
+  return doc.get('contractAddress');
+}
 
 // Loads the contract and returns a [DeployedContract] object
 Future<DeployedContract> loadContract() async {
+  String contractAddress = await getContractAddressFromFirestore();
+
   // Loads the contract's ABI from the 'assets/abi.json' file
   String abi = await rootBundle.loadString('assets/abi.json');
 
   // Creates an Ethereum address object for the contract using its hexadecimal address
   final contract = DeployedContract(
-    ContractAbi.fromJson(abi, 'Testing'),
-    EthereumAddress.fromHex(contractAddress1),
+    ContractAbi.fromJson(abi, 'Vote2U'),
+    EthereumAddress.fromHex(contractAddress),
   );
   return contract;
 }
@@ -25,6 +35,7 @@ Future<List<dynamic>> ask(
       contract: contract, function: ethFunction, params: args);
   return result;
 }
+
 
 // Calls a specific function in the contract and sends a transaction
 Future<String> callFunction(String funcName, List<dynamic> args,
@@ -47,127 +58,6 @@ Future<String> callFunction(String funcName, List<dynamic> args,
     fetchChainIdFromNetworkId: true,
   );
   return result;
-}
-// Starts the election by calling the 'startElection' function in the contract
-Future<String> startElection(Web3Client ethClient, String privateKey) async {
-  try {
-    final contract = await loadContract();
-    final ethFunction = contract.function('startElection');
-    final result = await ethClient.sendTransaction(
-      EthPrivateKey.fromHex(privateKey),
-      Transaction.callContract(
-        contract: contract,
-        function: ethFunction,
-        parameters: [],
-      ),
-      chainId: null,
-      fetchChainIdFromNetworkId: true,
-    );
-    return result; // Return the transaction hash as a String
-  } catch (e) {
-    if (kDebugMode) {
-      print('Error starting election: $e');
-    }
-    return ''; // Return an empty string on error
-  }
-}
-
-// Ends the election by calling the 'endElection' function in the contract
-Future<String> endElection(Web3Client ethClient, String privateKey) async {
-  try {
-    final contract = await loadContract();
-    final ethFunction = contract.function('endElection');
-    final result = await ethClient.sendTransaction(
-      EthPrivateKey.fromHex(privateKey),
-      Transaction.callContract(
-        contract: contract,
-        function: ethFunction,
-        parameters: [],
-      ),
-      chainId: null,
-      fetchChainIdFromNetworkId: true,
-    );
-    return result; // Return the transaction hash as a String
-  } catch (e) {
-    if (kDebugMode) {
-      print('Error ending election: $e');
-    }
-    return ''; // Return an empty string on error
-  }
-}
-
-// Add a candidate
-Future<String> addCandidate(String candidateId, String name, String course, Web3Client ethClient, String privateKey) async {
-  try {
-    final contract = await loadContract();
-    final ethFunction = contract.function('addCandidate');
-    final result = await ethClient.sendTransaction(
-      EthPrivateKey.fromHex(privateKey),
-      Transaction.callContract(
-        contract: contract,
-        function: ethFunction,
-        parameters: [candidateId, name, course],
-      ),
-      chainId: null,
-      fetchChainIdFromNetworkId: true,
-    );
-    return result; // Return the transaction hash as a String
-  } catch (e) {
-    if (kDebugMode) {
-      print('Error adding candidate: $e');
-    }
-    return ''; // Return an empty string on error
-  }
-}
-
-// Add a voter
-Future<String> addVoter(String studentId, Web3Client ethClient, String privateKey) async {
-  try {
-    final contract = await loadContract();
-    final ethFunction = contract.function('addVoter');
-    final params = [studentId]; // Pass the voterId as a parameter
-    final result = await ethClient.sendTransaction(
-      EthPrivateKey.fromHex(privateKey),
-      Transaction.callContract(
-        contract: contract,
-        function: ethFunction,
-        parameters: params, // Pass the params here
-      ),
-      chainId: null,
-      fetchChainIdFromNetworkId: true,
-    );
-    return result; // Return the transaction hash as a String
-  } catch (e) {
-    // Catch any exceptions that occur during the transaction
-    if (kDebugMode) {
-      print('Error adding voter: $e');
-    }
-    return ''; // Return an empty string on error
-  }
-}
-
-// Add bulk voters
-Future<String> addBulkVoters(List<String> studentIds, Web3Client ethClient, String privateKey) async {
-  try {
-    final contract = await loadContract();
-    final ethFunction = contract.function('addBulkVoters');
-    final result = await ethClient.sendTransaction(
-      EthPrivateKey.fromHex(privateKey),
-      Transaction.callContract(
-        contract: contract,
-        function: ethFunction,
-        parameters: [studentIds],
-      ),
-      chainId: null,
-      fetchChainIdFromNetworkId: true,
-    );
-    return result; // Return the transaction hash as a String
-  } catch (e) {
-    if (kDebugMode) {
-      print('Error adding bulk voters: $e');
-    }
-    return '';
-  }
 }
 
 // Gets the election name
@@ -258,6 +148,42 @@ Future<List<dynamic>> candidateInfo(
   return result;
 }
 
+// Votes for a candidate by calling the 'vote' function in the contract
+
+Future<String> vote(String studentId, List<String> candidateIds, Web3Client ethClient) async {
+  try {
+    final contract = await loadContract();
+    final function = contract.function('vote');
+
+    // Call the 'vote' function on the contract
+    final result = await ethClient.sendTransaction(
+      EthPrivateKey.fromHex(voter_private_key),
+      Transaction.callContract(
+        contract: contract,
+        function: function,
+        parameters: [studentId, candidateIds],
+      ),
+      chainId: null,
+      fetchChainIdFromNetworkId: true,
+    );
+
+    if (kDebugMode) {
+      print('Vote counted successfully');
+    }
+    return result;
+  } catch (e, s) {
+    if (kDebugMode) {
+      print('Error voting: $e');
+      print('Student ID: $studentId');
+      print('Candidate IDs: $candidateIds');
+      print('Stack trace: $s');
+    }
+    return 'Error: $e';
+  }
+}
+
+
+
 Future<BigInt> getNumCandidatesToWin(Web3Client ethClient) async {
   final contract = await loadContract();
   final function = contract.function('getNumCandidatesToWin');
@@ -340,6 +266,8 @@ Future<bool> getElectionEnded(Web3Client ethClient) async {
   return result[0] as bool;
 }
 
+
+
 Future<bool> isCandidateRegistered(Web3Client ethClient, String candidateId) async {
   if (candidateId.isEmpty) {
     if (kDebugMode) {
@@ -367,25 +295,6 @@ Future<bool> isCandidateRegistered(Web3Client ethClient, String candidateId) asy
   }
 }
 
-Future<String?> getVoterAddress(Web3Client ethClient, String studentId) async {
-  try {
-    final contract = await loadContract();
-
-    final result = await ethClient.call(
-      contract: contract,
-      function: contract.function('studentIdToVoterAddress'),
-      params: [studentId],
-    );
-
-    return result[0].toString();
-  } catch (e) {
-    if (kDebugMode) {
-      print('Error getting voter address: $e');
-    }
-    return null;
-  }
-}
-
 // Returns the vote count for a candidate by calling the 'getCandidateVoteCount' function in the contract
 Future<int> getCandidateVoteCount(String candidateId, Web3Client ethClient) async {
   try {
@@ -395,6 +304,7 @@ Future<int> getCandidateVoteCount(String candidateId, Web3Client ethClient) asyn
       contract: contract,
       function: contract.function('getCandidateVoteCount'),
       params: [candidateId],
+      
     );
 
     return result[0].toInt();

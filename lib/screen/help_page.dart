@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vote2u_admin/utils/app_drawer.dart';
-import 'package:vote2u_admin/utils/constants.dart';
+import 'package:vote2u/utils/app_drawer.dart';
+import 'package:vote2u/utils/constants.dart';
 
-class VotersPage extends StatefulWidget {
-  const VotersPage({super.key});
+class HelpPage extends StatefulWidget {
+  const HelpPage({super.key});
 
   @override
-  _VotersPage createState() => _VotersPage();
+  _HelpPage createState() => _HelpPage();
 }
-class _VotersPage extends State<VotersPage> {
+class _HelpPage extends State<HelpPage> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -34,7 +34,7 @@ class _VotersPage extends State<VotersPage> {
               },
             ),
             const Text(
-              'Voters',
+              'FAQ',
               style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ],

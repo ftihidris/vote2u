@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:vote2u_admin/screen/auth/auth_preferences.dart';
-import 'package:vote2u_admin/screen/on_boarding_page.dart';
-import 'package:vote2u_admin/screen/auth/login_page.dart'; 
+import 'package:vote2u/screen/auth/auth_preferences.dart';
+import 'package:vote2u/screen/on_boarding_page.dart';
+import 'package:vote2u/screen/auth/login_page.dart'; 
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

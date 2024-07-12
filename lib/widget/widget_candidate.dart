@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:vote2u_admin/utils/constants.dart';
+import 'package:vote2u/utils/constants.dart';
 
 Widget buildCardCandidate(
   BuildContext context, 
   String candidateName, 
   String candidateID,
   String candidateCourse,
-  String imageUrl,
+  String imageName,
 ) {
-  print('Image URL in buildCardCandidate: $imageUrl');
   return GestureDetector(
     child: Card(
       shape: RoundedRectangleBorder(
@@ -25,7 +24,7 @@ Widget buildCardCandidate(
             child: Material(
               elevation: elevation3, // Adjust elevation as needed
               child: Image.network(
-                imageUrl,
+                imageName,
                 height: 140,
                 fit: BoxFit.cover,
               ),
