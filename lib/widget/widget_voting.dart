@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:vote2u/utils/constants.dart';
+import 'package:web3dart/web3dart.dart';
 
-Widget buildResultCard(
-  BuildContext context, 
-  String candidateName, 
-  String candidateID,
-  String candidateCourse,
-  String imageName,
-  int voteCount,
-) {
+Widget buildCardVoting(
+    BuildContext context,
+    String candidateName,
+    String candidateID,
+    String candidateCourse,
+    String imageUrl,
+    Web3Client ethClient,
+    bool isSelected,
+    VoidCallback onVotePressed,
+  ) {
   return GestureDetector(
     child: Card(
       shape: RoundedRectangleBorder(
-        borderRadius: mediumBorderRadius,
+        borderRadius: BorderRadius.circular(10),
       ),
       clipBehavior: Clip.antiAliasWithSaveLayer,
-      elevation: elevation2,
+      elevation: 2,
       margin: const EdgeInsets.fromLTRB(18, 20, 18, 0),
       child: Stack(
         children: [
@@ -25,17 +28,17 @@ Widget buildResultCard(
               SizedBox(
                 width: 110,
                 child: Material(
-                  elevation: elevation3, // Adjust elevation as needed
+                  elevation: 3,
                   child: Image.network(
-                    imageName,
-                    height: 140,
+                    imageUrl,
+                    height: 120,
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
               Expanded(
                 child: Padding(
-                  padding: mediumEdgeInsets,
+                  padding: const EdgeInsets.all(10.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -72,22 +75,27 @@ Widget buildResultCard(
           Positioned(
             bottom: 8,
             right: 8,
-            height: 40,
-            child: 
-            Container(
-              width: 150, // Set the width of the container
-              height: 25, // Set the height of the container
-              decoration: BoxDecoration(
-                color: darkPurple,
-                borderRadius: BorderRadius.circular(20)
+            height: 35,
+            child: GestureDetector(
+              onTap: () {
+                onVotePressed(); // Pass the candidate ID to the callback
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: isSelected? darkPurple : softPurple,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 17,
+                ),
+                child: const Center(
+                  child: Text(
+                    'Vote',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
               ),
-              child: Center(
-                child: Text(
-                 '$voteCount Votes', 
-                style: const TextStyle (color: Colors.white, fontSize: 14),
             ),
-              ),
-          ),
           ),
         ],
       ),

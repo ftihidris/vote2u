@@ -1,11 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
-import 'package:vote2u_admin/screen/dashboard/dashboard_chart.dart';
-import 'package:vote2u_admin/utils/app_drawer.dart';
-import 'package:vote2u_admin/utils/constants.dart';
-import 'package:vote2u_admin/utils/functions.dart';
-import 'package:vote2u_admin/widget/widget_election.dart';
+import 'package:vote2u/screen/dashboard/dashboard_chart.dart';
+import 'package:vote2u/utils/app_drawer.dart';
+import 'package:vote2u/utils/constants.dart';
+import 'package:vote2u/utils/functions.dart';
+import 'package:vote2u/widget/widget_dashboard.dart';
 import 'package:web3dart/web3dart.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -19,6 +20,7 @@ class _DashboardPage extends State<DashboardPage> {
   late Client httpClient;
   late Web3Client ethClient;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<CandidateChartState> _candidateChartKey = GlobalKey<CandidateChartState>();
 
   @override
   void initState() {
@@ -171,24 +173,38 @@ class _DashboardPage extends State<DashboardPage> {
   }
 
   Widget _buildChartCard(Web3Client ethClient) {
-  return Padding(
-    padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-    child: SizedBox(
-      height: 400, // Adjust the height as needed
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                child: buildCardChart(
-                  'Comparison of Candidates Result', 
-                  const CandidateChart(),
-                ),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+      child: SizedBox(
+        height: 458, // Adjust the height as needed
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: buildCardChart(
+                'Comparison of Candidates Result',
+                CandidateChart(key: _candidateChartKey),
               ),
-            ],
-          ),
-        )
-  );
-}
-
-
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                if (_candidateChartKey.currentState != null) {
+                  if (kDebugMode) {
+                    print('Current state is not null');
+                  }
+                  _candidateChartKey.currentState!.exportChartToPdf();
+                } else {
+                  if (kDebugMode) {
+                    print('Current state is null');
+                  }
+                }
+              },
+              child: const Text('Export Chart to PDF'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
