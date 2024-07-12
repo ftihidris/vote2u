@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:vote2u/screen/dashboard/dashboard_page.dart';
-import 'package:vote2u/screen/home_page.dart';
-import 'package:vote2u/screen/result/result_page.dart';
-import 'package:vote2u/screen/settings_page.dart';
-import 'package:vote2u/screen/voting/voting_page.dart';
-import 'package:vote2u/screen/help_page.dart';
-import 'package:vote2u/screen/candidate_page.dart';
-import 'package:vote2u/screen/voting/verification_page.dart';
-import 'package:web3dart/web3dart.dart';
+import 'package:vote2u_admin/election_page.dart';
+import 'package:vote2u_admin/screen/home_page.dart';
+import 'package:vote2u_admin/screen/candidates/add_candidates_page.dart';
+import 'package:vote2u_admin/screen/settings_page.dart';
+import 'package:vote2u_admin/screen/voters/add_voters_page.dart';
+import 'package:vote2u_admin/screen/voters/voters_page.dart';
+import 'package:vote2u_admin/screen/candidates/candidate_page.dart';
 
 
 void navigateToPage(BuildContext context, String title) {
@@ -15,37 +13,24 @@ void navigateToPage(BuildContext context, String title) {
     case 'Home':
       Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
       break;
-    case 'Start Voting':
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const VerificationPage()));
+    case 'Election':
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ElectionPage()));
       break;
-    case 'Candidates':
+    case 'Candidates List':
       Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CandidatePage()));
       break;
-    case 'Result':
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ResultPage()));
+    case 'Add Candidates':
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AddCandidates()));
       break;
-    case 'Dashboard':
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const DashboardPage()));
+    case 'Add Voters':
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AddVoters()));
       break;
-    case 'Need Help?':
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HelpPage()));
+    case 'Voters List':
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const VotersPage()));
       break;
     case 'Settings':
       Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SettingsPage()));
       break;
     default:
-  }
-}
-void navigateToVoting(
-  BuildContext context, 
-  String title,
-  Web3Client ethClient,
-  TextEditingController controller ) {
-
-  switch (title) {
-    case 'Voting':
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const VotingPage()));
-      break;
-          default:
   }
 }

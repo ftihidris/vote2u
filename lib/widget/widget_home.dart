@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:vote2u/utils/constants.dart';
-import 'package:vote2u/utils/navigation_utils.dart';
+import 'package:vote2u_admin/utils/constants.dart';
+import 'package:vote2u_admin/utils/navigation_utils.dart';
 
 Widget buildCardWithHome(BuildContext context, String title, String imagePath) {
   return GestureDetector(
@@ -43,7 +43,21 @@ Widget buildCardWithHome(BuildContext context, String title, String imagePath) {
   );
 }
 
-Widget buildCardStatus(BuildContext context,String title, String electionName, bool electionEnded, String voterStatus) {
+Widget buildCardStatus(BuildContext context,String title, String electionName, bool electionStarted, bool electionEnded, String voterStatus) {
+  String electionStatusText;
+  Color electionStatusColor;
+
+  if (!electionStarted) {
+    electionStatusText = 'Not started';
+    electionStatusColor = Colors.red;
+  } else if (electionEnded) {
+    electionStatusText = 'Ended';
+    electionStatusColor = Colors.red;
+  } else {
+    electionStatusText = 'Ongoing';
+    electionStatusColor = Colors.green;
+  }
+  
   return GestureDetector(
     onTap: () {
       navigateToPage(context, 'Election Status');
@@ -91,9 +105,7 @@ Widget buildCardStatus(BuildContext context,String title, String electionName, b
                           MainAxisAlignment.center, // Center vertically
                       children: [
                         buildStatusIndicator(
-                            'Election Status',
-                            electionEnded ? 'Ended' : 'Ongoing',
-                            electionEnded ? Colors.red : Colors.green),
+                          'Election Status', electionStatusText, electionStatusColor),
                       ],
                     ),
                     Column(

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
-import 'package:vote2u/screen/dashboard/dashboard_chart.dart';
-import 'package:vote2u/utils/app_drawer.dart';
-import 'package:vote2u/utils/constants.dart';
-import 'package:vote2u/utils/functions.dart';
-import 'package:vote2u/widget/widget_dashboard.dart';
+import 'package:vote2u_admin/screen/dashboard/dashboard_chart.dart';
+import 'package:vote2u_admin/utils/app_drawer.dart';
+import 'package:vote2u_admin/utils/constants.dart';
+import 'package:vote2u_admin/utils/functions.dart';
+import 'package:vote2u_admin/widget/widget_election.dart';
 import 'package:web3dart/web3dart.dart';
 
 class DashboardPage extends StatefulWidget {

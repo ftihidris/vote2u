@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vote2u/utils/constants.dart';
+import 'package:vote2u_admin/utils/constants.dart';
 
 Widget buildResultCard(
   BuildContext context, 

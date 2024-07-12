@@ -1,17 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vote2u/utils/constants.dart';
-import 'package:vote2u/utils/toast.dart';
+import 'package:vote2u_admin/utils/constants.dart';
+import 'package:vote2u_admin/utils/toast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Stream<User?> get authStateChanges => _auth.authStateChanges();
 
   // Method to store user's login state using shared preferences
   Future<void> _storeUserLoggedInState(bool isLoggedIn) async {
@@ -46,6 +46,7 @@ class FirebaseAuthService {
 
       // Send email verification
       await credential.user!.sendEmailVerification();
+
 
       // Store user information in Firestore users collection
       await _firestore.collection('users').doc(credential.user!.uid).set({
@@ -84,10 +85,9 @@ class FirebaseAuthService {
         password: password,
       );
 
-      await credential.user!.sendEmailVerification();
-
       if (!credential.user!.emailVerified) {
         await signOut(); // Force logout if email is not verified
+        showToast(message: 'Please verify your email.');
         return null;
       }
 
@@ -195,7 +195,7 @@ class FirebaseAuthService {
     }
   }
 
-// Function to send password reset email
+  // Function to send password reset email
   Future<void> sendPasswordResetEmail({required String email}) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
@@ -215,11 +215,5 @@ class FirebaseAuthService {
     } catch (e) {
       throw Exception('Failed to reauthenticate user: $e');
     }
-  }
-}
-Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  if (kDebugMode) {
-    print('Handling a background message: ${message.messageId}');
   }
 }
