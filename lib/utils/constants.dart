@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 //blockchain integration
 // ignore: non_constant_identifier_names
 String infura_url=
-    "your_infura_url";
+     "_REMOVED";
 
-// ignore: non_constant_identifier_names
-String owner_private_key =
-    "your_owner_private_key";
+ // ignore: non_constant_identifier_names
+ String owner_private_key =
+     "_REMOVED";
 
-// ignore: non_constant_identifier_names
-String voter_private_key =
-    "your_voter_private_key";
+ // ignore: non_constant_identifier_names
+ String voter_private_key =
+     "_REMOVED";
 
 //colour
 const darkPurple = Color.fromARGB(255, 63, 41, 120);
